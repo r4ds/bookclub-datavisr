@@ -11,7 +11,7 @@ As we read, we are producing [notes about the book](https://r4ds.io/datavisr).
 
 If you would like to present, please see the sign-up sheet for your cohort (linked below, and pinned in the [#book_club-datavisr](https://rfordatascience.slack.com/archives/C04K4SAQ32L) channel on Slack)!
 
-- [Cohort 1](https://docs.google.com/spreadsheets/d/1yrXUdZ95upU3kISocqinvaDh-U2JK3mnjhtj4Fr27H8/edit?usp=sharing) (started 2023-03-26, facilitated by @Lydia Gibson): [Sundays, 17:00 CST/CDT](https://www.timeanddate.com/worldclock/converter.html?iso=20230326T220000&p1=24&p2=1440) | [meeting videos](https://youtube.com/playlist?list=PL3x6DOfs2NGjOid7KlCQ1f7gxGndV51Oc)
+- [Cohort 1](https://docs.google.com/spreadsheets/d/1yrXUdZ95upU3kISocqinvaDh-U2JK3mnjhtj4Fr27H8/edit?usp=sharing) (started 2023-03-26, facilitated by @Lydia Gibson and @Oluwafemi Oyedele): [Sundays, 17:00 CST/CDT](https://www.timeanddate.com/worldclock/converter.html?iso=20230326T220000&p1=24&p2=1440) | [meeting videos](https://youtube.com/playlist?list=PL3x6DOfs2NGjOid7KlCQ1f7gxGndV51Oc)
 
 <hr>
 
