@@ -93,15 +93,11 @@ In the newest versions of RStudio, you can use the *Connections pane* to quickly
 knitr::include_graphics("images/01-dplyr-functions.jpg")
 ```
 
-NOTE: tidyr 1.0.0 introduced `pivot_longer()` and `pivot_wider()`, replacing the older `spread()` and `gather()` functions. 
-
-
 ## Selecting variables
 
 The `dplyr::select` function allows you to limit your dataset to specified variables (columns).
 
 ```{r 01-06, eval=FALSE}
-
 library(dplyr)
 data("starwars")
 
@@ -114,7 +110,6 @@ newdata <- select(starwars, name, mass:species)
 
 # keep all variables except birth_year and gender
 newdata <- select(starwars, -birth_year, -gender)
-
 ```
 
 ## Selecting observations
@@ -122,19 +117,17 @@ newdata <- select(starwars, -birth_year, -gender)
 The `dplyr::filter` function allows you to limit your dataset to observations (rows) meeting a specific criteria. Multiple criteria can be combined with the `&` (AND) and `|` (OR) symbols.
 
 ```{r 01-07, message=FALSE, warning=FALSE}
-
 library(dplyr)
 data("starwars")
 
 # select females
 newdata <- filter(starwars, 
-                  gender == "female")
+                  gender == "feminine")
 
 # select females that are from Alderaan
 newdata <- filter(starwars, 
-                  gender == "female" & 
+                  gender == "feminine" & 
                   homeworld == "Alderaan")
-
 ```
 
 
@@ -158,11 +151,9 @@ newdata <- mutate(starwars,
 The `ifelse` function (part of base R) can be used for recoding data. The format is `ifelse(test, return if TRUE, return if FALSE)`.
 
 ```{r 01-09}
-
 # if height is greater than 180 
 # then heightcat = "tall", 
 # otherwise heightcat = "short"
-
 newdata <- mutate(starwars, 
                   heightcat = ifelse(height > 180, 
                                      "tall", 
@@ -177,13 +168,11 @@ newdata <- mutate(starwars,
 
 ## Summarizing data
 
-- The `dplyr::summarize` function can be used to reduce multiple values down to a single value (such as a mean). 
+The `dplyr::summarize` function can be used to reduce multiple values down to a single value (such as a mean). 
 
-- It is often used in conjunction with the `group_by` function, to calculate statistics by group. 
 
 ```{r 01-10}
 library(dplyr)
-
 # calculate mean height and mass
 newdata <- summarize(starwars, 
                      mean_ht = mean(height, na.rm=TRUE), 
@@ -191,6 +180,9 @@ newdata <- summarize(starwars,
 newdata
 ```
 ##
+
+
+The `dplyr::summarize` is often used in conjunction with the `group_by` function, to calculate statistics by group. 
 
 ```{r 01-12}
 # calculate mean height and weight by gender
@@ -210,43 +202,60 @@ newdata
 
 
 ```{r 01-13}
-
 library(dplyr)
 
-# calculating the mean height for women by species 
+# calculate the mean height for women by species
 newdata <- starwars %>%
-  filter(gender == "female") %>%
-  group_by("species") %>%
+  filter(gender == "feminine") %>%
+  group_by(species) %>%
   summarize(mean_ht = mean(height, na.rm = TRUE))
 
+newdata
 ```
 
 
 ## Reshaping data
 
-You can convert a wide dataset to a long dataset using `pivot_longer()`, and a long dataset to a wide dataset using `pivot_wider()`.
+**NOTE:** tidyr 1.0.0 introduced `pivot_longer()` and `pivot_wider()`, replacing the older `spread()` and `gather()` functions. 
 
 ```{r 01-14}
 library(tidyr)
 
+table1 #tidy dataset
+```
+
+## `pivot_wider()`
+
+
+```{r 01-15}
+glimpse(table2)
+
+table2 %>%
+  pivot_wider(names_from = type, values_from = count)
+```
+
+
+
+## `pivot_longer()`
+
+
+```{r 01-16}
+glimpse(table4a)
+
+table4a %>%
+  pivot_longer(c(`1999`, `2000`), names_to = "year", values_to = "cases")
 ```
 
 
 ## Missing Data
 
-There are three basic approaches to dealing with missing data: feature selection, listwise deletion, and imputation
+There are three basic approaches to dealing with missing data: *feature selection*, *listwise deletion*, and *imputation*.
 
-### Feature selection
+- In **feature selection**, you delete variables (columns) that contain too many missing values.
 
-In feature selection, you delete variables (columns) that contain too many missing values.
+- **Listwise deletion** involves deleting observations (rows) that contain missing values on any of the variables of interest.
 
-### Listwise deletion
-
-Listwise deletion involves deleting observations (rows) that contain missing values on any of the variables of interest.
-
-### Imputation
-
-Imputation involves replacing missing values with “reasonable” guesses about what the values would have been if they had not been missing. There are several approaches, as detailed in such packages as `VIM`, `mice`, `Amelia` and `missForest`.
+- **Imputation** involves replacing missing values with “reasonable” guesses about what the values would have been if they had not been missing. There are several approaches, as detailed in such packages as `VIM`, `mice`, `Amelia` and `missForest`.
 
 ## Resources
 
