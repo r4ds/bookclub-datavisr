@@ -10,5 +10,7 @@ Depends:
 Imports: 
     bookdown,
     carData,
-    rmarkdown
+    dplyr,
+    rmarkdown,
+    tidyr
 Encoding: UTF-8
