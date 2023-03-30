@@ -9,5 +9,8 @@ Depends:
     R (>= 3.1.0)
 Imports: 
     bookdown,
-    rmarkdown
+    carData,
+    dplyr,
+    rmarkdown,
+    tidyr
 Encoding: UTF-8
