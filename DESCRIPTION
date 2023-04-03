@@ -11,6 +11,11 @@ Imports:
     bookdown,
     carData,
     dplyr,
+    ggplot2,
+    grid,
+    gridExtra,
+    mosaicData,
+    png,
     rmarkdown,
     tidyr
 Encoding: UTF-8
