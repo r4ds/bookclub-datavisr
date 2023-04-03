@@ -89,8 +89,8 @@ In the newest versions of RStudio, you can use the *Connections pane* to quickly
 - Two of the quickest and easiest to learn approaches to clean data are using the [`dplyr`](https://dplyr.tidyverse.org/) and [`tidyr`](https://tidyr.tidyverse.org/) package.
 
 
-```{r 01-05, echo=FALSE}
-knitr::include_graphics("images/01-dplyr-functions.jpg")
+```{r, 01-05, echo=FALSE}
+knitr::include_graphics("images/dplyr.png")
 ```
 
 ## Selecting variables
