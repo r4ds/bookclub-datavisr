@@ -1,13 +1,70 @@
 # Univariate Graphs
 
 **Learning objectives:**
+- Describes graphs for visualizing the distribution of a single categorical (e.g. race) or quantitative (e.g. income) variable
 
-- THESE ARE NICE TO HAVE BUT NOT ABSOLUTELY NECESSARY
 
-## SLIDE 1 {-}
+## Categorical vs. Quantitive Variables
 
-- ADD SLIDES AS SECTIONS (`##`).
-- TRY TO KEEP THEM RELATIVELY SLIDE-LIKE; THESE ARE NOTES, NOT THE BOOK ITSELF.
+- Categorical (i.e. Qualitative) data are descriptive and can be grouped into meaningful themes or categories.
+
+- The distribution of a single categorical variable is typically plotted with a bar chart, a pie chart, or (less commonly) a tree map.
+
+- Quantitative data are countable or measurable and can be analyzed using statistical analysis.
+
+- The distribution of a single quantitative variable is typically plotted with a histogram, kernel density plot, or dot plot.
+
+
+```{r, 01-05, echo=FALSE}
+knitr::include_graphics("images/03_cat_quant.png")
+```
+
+## Bar Chart
+
+```{r}
+library(ggplot2, dplyr)
+data(Marriage, package = "mosaicData")
+
+# plot the distribution of race
+ggplot(Marriage, aes(x = race)) + 
+  geom_bar()
+```
+
+
+## Pie Chart
+
+```{r}
+
+library(ggplot2, dplyr)
+# create a basic ggplot2 pie chart
+plotdata <- Marriage %>% 
+    count(race) %>% 
+    arrange(desc(race)) %>% 
+    mutate(prop = round(n * 100 / sum(n), 1),
+           lab.ypos = cumsum(prop) - 0.5  *prop)
+  
+  ggplot(plotdata, 
+         aes(x = "", 
+             y = prop, 
+             fill = race)) +
+    geom_bar(width = 1, 
+             stat = "identity", 
+             color = "black") +
+    coord_polar("y", 
+                start = 0, 
+                direction = -1) +
+    theme_void()
+
+```
+
+
+## Tree map
+
+## Histogram
+
+## Kernel Density Plot
+
+## Dot Chart
 
 ## Meeting Videos {-}
 
