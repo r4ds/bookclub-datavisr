@@ -17,5 +17,6 @@ Imports:
     mosaicData,
     png,
     rmarkdown,
+    tibble,
     tidyr
 Encoding: UTF-8

@@ -33,6 +33,8 @@ ggplot(Marriage, aes(x = race)) +
 
 ## Pie Chart
 
+Pie charts are controversial in statistics. If your goal is to compare the frequency of categories, you are better off with bar charts (humans are better at judging the length of bars than the volume of pie slices). If your goal is compare each category with the the whole (e.g., what portion of participants are Hispanic compared to all participants), and the number of categories is small, then pie charts may work for you. It takes a bit more code to make an attractive pie chart in R.
+
 ```{r}
 
 library(ggplot2, dplyr)
@@ -60,11 +62,103 @@ plotdata <- Marriage %>%
 
 ## Tree map
 
+An alternative to a pie chart is a tree map. Unlike pie charts, it can handle categorical variables that have many levels.
+
+```{r}
+library(treemapify)
+
+# create a treemap of marriage officials
+plotdata <- Marriage %>%
+  count(officialTitle)
+
+ggplot(plotdata, 
+       aes(fill = officialTitle, 
+           area = n)) +
+  geom_treemap() + 
+  labs(title = "Marriages by officiate")
+```
+
+
 ## Histogram
+
+```{r}
+library(ggplot2)
+
+# plot the age distribution using a histogram
+ggplot(Marriage, aes(x = age)) +
+  geom_histogram() + 
+  labs(title = "Participants by age",
+       x = "Age")
+```
+
+
 
 ## Kernel Density Plot
 
+An alternative to a histogram is the kernel density plot. Technically, kernel density estimation is a nonparametric method for estimating the probability density function of a continuous random variable. (What??) Basically, we are trying to draw a smoothed histogram, where the area under the curve equals one.
+
+```{r}
+# Create a kernel density plot of age
+ggplot(Marriage, aes(x = age)) +
+  geom_density() + 
+  labs(title = "Participants by age")
+```
+
+
+
 ## Dot Chart
+
+Another alternative to the histogram is the dot chart. Again, the quantitative variable is divided into bins, but rather than summary bars, each observation is represented by a dot. By default, the width of a dot corresponds to the bin width, and dots are stacked, with each dot representing one observation. This works best when the number of observations is small (say, less than 150).
+
+```{r}
+# plot the age distribution using a dotplot
+ggplot(Marriage, aes(x = age)) +
+  geom_dotplot() + 
+  labs(title = "Participants by age",
+       y = "Proportion",
+       x = "Age")
+```
+
+##
+
+
+
+Histogram colors can be modified using two options
+
+fill - fill color for the bars
+color - border color around the bars
+
+One of the most important histogram options is bins, which controls the number of bins into which the numeric variable is divided (i.e., the number of bars in the plot). The default is 30, but it is helpful to try smaller and larger numbers to get a better impression of the shape of the distribution.
+
+Alternatively, you can specify the binwidth, the width of the bins represented by the bars.
+
+As with bar charts, the y-axis can represent counts or percent of the total.
+
+----
+
+##
+
+As with previous charts, we can use fill and color to specify the fill and border colors.
+
+The degree of smoothness is controlled by the bandwidth parameter bw. To find the default value for a particular variable, use the bw.nrd0 function. Values that are larger will result in more smoothing, while values that are smaller will produce less smoothing.
+
+In this example, the default bandwidth for age is 5.18. Choosing a value of 1 resulted in less smoothing and more detail.
+
+Kernel density plots allow you to easily see which scores are most frequent and which are relatively rare. However it can be difficult to explain the meaning of the y-axis to a non-statistician. (But it will make you look really smart at parties!)
+
+## Resources
+
+[ggplot2 reference](https://ggplot2.tidyverse.org/reference/index.html)
+
+For more information about options within specific geoms, visit: 
+
+- `geom_bar`:https://ggplot2.tidyverse.org/reference/geom_bar.html
+
+- `geom_histogram`:https://ggplot2.tidyverse.org/reference/geom_histogram.html
+
+- `geom_density`:https://ggplot2.tidyverse.org/reference/geom_density.html
+
+- `geom_dotplot`:https://ggplot2.tidyverse.org/reference/geom_dotplot.html
 
 ## Meeting Videos {-}
 
