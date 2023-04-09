@@ -1,30 +1,44 @@
 # Univariate Graphs
 
 **Learning objectives:**
+
 - Describes graphs for visualizing the distribution of a single categorical (e.g. race) or quantitative (e.g. income) variable
 
 
 ## Categorical vs. Quantitive Variables
 
-- Categorical (i.e. Qualitative) data are descriptive and can be grouped into meaningful themes or categories.
+- **Categorical (i.e. Qualitative) data** are descriptive and can be grouped into meaningful themes or categories. The distribution of a single categorical variable is typically plotted with a bar chart, a pie chart, or (less commonly) a tree map.
 
-- The distribution of a single categorical variable is typically plotted with a bar chart, a pie chart, or (less commonly) a tree map.
+- **Quantitative data** are countable or measurable and can be analyzed using statistical analysis. The distribution of a single quantitative variable is typically plotted with a histogram, kernel density plot, or dot plot.
 
-- Quantitative data are countable or measurable and can be analyzed using statistical analysis.
-
-- The distribution of a single quantitative variable is typically plotted with a histogram, kernel density plot, or dot plot.
+## Categorical vs. Quantitive Variables cont.
 
 
-```{r, 01-05, echo=FALSE}
+```{r, 03-01, echo=FALSE, dpi= 20}
 knitr::include_graphics("images/03_cat_quant.png")
 ```
 
-## Bar Chart
+## Marriage Dataset
 
-```{r}
-library(ggplot2, dplyr)
+- The Marriage dataset comes from the `mosiacData` package. 
+
+- It is contains the marriage records of 98 individuals collected from a probate court in Mobile County, Alabama.
+
+```{r 03-02, include=FALSE}
+library(ggplot2)
+library(dplyr)
 data(Marriage, package = "mosaicData")
 
+glimpse(Marriage)
+```
+
+
+
+## Bar Chart
+
+A [bar chart](https://r-graph-gallery.com/barplot.html) is used to display the relationship between a numeric and a categorical variable. 
+
+```{r 03-03}
 # plot the distribution of race
 ggplot(Marriage, aes(x = race)) + 
   geom_bar()
@@ -33,11 +47,10 @@ ggplot(Marriage, aes(x = race)) +
 
 ## Pie Chart
 
-Pie charts are controversial in statistics. If your goal is to compare the frequency of categories, you are better off with bar charts (humans are better at judging the length of bars than the volume of pie slices). If your goal is compare each category with the the whole (e.g., what portion of participants are Hispanic compared to all participants), and the number of categories is small, then pie charts may work for you. It takes a bit more code to make an attractive pie chart in R.
+A [pie chart](https://r-graph-gallery.com/pie-plot.html) is a circle divided into sectors that each represent a proportion of the whole. 
 
-```{r}
 
-library(ggplot2, dplyr)
+```{r 03-04}
 # create a basic ggplot2 pie chart
 plotdata <- Marriage %>% 
     count(race) %>% 
@@ -59,12 +72,24 @@ plotdata <- Marriage %>%
 
 ```
 
+## Caveat: Pie charts
+
+
+Pie charts are controversial in statistics. If your goal is to compare the frequency of categories, you are better off with bar charts (humans are better at judging the length of bars than the volume of pie slices). If your goal is compare each category with the the whole (e.g., what portion of participants are Hispanic compared to all participants), and the number of categories is small, then pie charts may work for you. It takes a bit more code to make an attractive pie chart in R.
 
 ## Tree map
 
-An alternative to a pie chart is a tree map. Unlike pie charts, it can handle categorical variables that have many levels.
+- An alternative to a pie chart, a [tree map](https://r-graph-gallery.com/treemap.html) displays hierarchical data as a set of nested rectangles. 
 
-```{r}
+- Unlike pie charts, tree maps can handle categorical variables that have many levels.
+
+- Each group is represented by a rectangle, which area is proportional to its value.
+
+
+
+## Tree map cont.
+
+```{r 03-05}
 library(treemapify)
 
 # create a treemap of marriage officials
@@ -81,9 +106,9 @@ ggplot(plotdata,
 
 ## Histogram
 
-```{r}
-library(ggplot2)
+A [histogram](https://r-graph-gallery.com/histogram.html) is used to study the distribution of a single quantitative variable. 
 
+```{r 03-06, message=FALSE}
 # plot the age distribution using a histogram
 ggplot(Marriage, aes(x = age)) +
   geom_histogram() + 
@@ -95,9 +120,9 @@ ggplot(Marriage, aes(x = age)) +
 
 ## Kernel Density Plot
 
-An alternative to a histogram is the kernel density plot. Technically, kernel density estimation is a nonparametric method for estimating the probability density function of a continuous random variable. (What??) Basically, we are trying to draw a smoothed histogram, where the area under the curve equals one.
+An alternative to a histogram, a [density plot](https://r-graph-gallery.com/density-plot.html) also shows the distribution of a single numeric variable.
 
-```{r}
+```{r 03-07}
 # Create a kernel density plot of age
 ggplot(Marriage, aes(x = age)) +
   geom_density() + 
@@ -108,9 +133,9 @@ ggplot(Marriage, aes(x = age)) +
 
 ## Dot Chart
 
-Another alternative to the histogram is the dot chart. Again, the quantitative variable is divided into bins, but rather than summary bars, each observation is represented by a dot. By default, the width of a dot corresponds to the bin width, and dots are stacked, with each dot representing one observation. This works best when the number of observations is small (say, less than 150).
+Another alternative to the histogram is the dot chart. 
 
-```{r}
+```{r 03-08, message=FALSE}
 # plot the age distribution using a dotplot
 ggplot(Marriage, aes(x = age)) +
   geom_dotplot() + 
@@ -119,46 +144,30 @@ ggplot(Marriage, aes(x = age)) +
        x = "Age")
 ```
 
-##
+## Geom options
 
+- `fill` fills color for the bars
+- `color` controls the border color around the bars
+- `bins` controls the number of bins into which the numeric variable is divided
+- `binwidth` controls the width of the bins represented by the bars
+- `bw` controls the degree of smoothness
 
-
-Histogram colors can be modified using two options
-
-fill - fill color for the bars
-color - border color around the bars
-
-One of the most important histogram options is bins, which controls the number of bins into which the numeric variable is divided (i.e., the number of bars in the plot). The default is 30, but it is helpful to try smaller and larger numbers to get a better impression of the shape of the distribution.
-
-Alternatively, you can specify the binwidth, the width of the bins represented by the bars.
-
-As with bar charts, the y-axis can represent counts or percent of the total.
-
-----
-
-##
-
-As with previous charts, we can use fill and color to specify the fill and border colors.
-
-The degree of smoothness is controlled by the bandwidth parameter bw. To find the default value for a particular variable, use the bw.nrd0 function. Values that are larger will result in more smoothing, while values that are smaller will produce less smoothing.
-
-In this example, the default bandwidth for age is 5.18. Choosing a value of 1 resulted in less smoothing and more detail.
-
-Kernel density plots allow you to easily see which scores are most frequent and which are relatively rare. However it can be difficult to explain the meaning of the y-axis to a non-statistician. (But it will make you look really smart at parties!)
 
 ## Resources
 
-[ggplot2 reference](https://ggplot2.tidyverse.org/reference/index.html)
+For more information about options within geoms, visit [https://ggplot2.tidyverse.org/reference/index.html](https://ggplot2.tidyverse.org/reference/index.html) 
 
-For more information about options within specific geoms, visit: 
+Featured geoms:
 
-- `geom_bar`:https://ggplot2.tidyverse.org/reference/geom_bar.html
+- [`geom_bar`](https://ggplot2.tidyverse.org/reference/geom_bar.html)
 
-- `geom_histogram`:https://ggplot2.tidyverse.org/reference/geom_histogram.html
+- [`geom_histogram`](https://ggplot2.tidyverse.org/reference/geom_histogram.html)
 
-- `geom_density`:https://ggplot2.tidyverse.org/reference/geom_density.html
+- [`geom_density`](https://ggplot2.tidyverse.org/reference/geom_density.html)
 
-- `geom_dotplot`:https://ggplot2.tidyverse.org/reference/geom_dotplot.html
+- [`geom_dotplot`](https://ggplot2.tidyverse.org/reference/geom_dotplot.html)
+
+- [`geom_treemap`](https://wilkox.org/treemapify/)
 
 ## Meeting Videos {-}
 
