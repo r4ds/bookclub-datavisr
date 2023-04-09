@@ -146,11 +146,11 @@ ggplot(Marriage, aes(x = age)) +
 
 ## Geom options
 
-- `fill` fills color for the bars
-- `color` controls the border color around the bars
+- `fill` fills color inside
+- `color` controls the border color 
 - `bins` controls the number of bins into which the numeric variable is divided
-- `binwidth` controls the width of the bins represented by the bars
-- `bw` controls the degree of smoothness
+- `binwidth` controls the width of the bins 
+- `bw` controls the degree of smoothness of density plot
 
 
 ## Resources
@@ -168,6 +168,8 @@ Featured geoms:
 - [`geom_dotplot`](https://ggplot2.tidyverse.org/reference/geom_dotplot.html)
 
 - [`geom_treemap`](https://wilkox.org/treemapify/)
+
+For more information about annotations, see [*ggplot2: Elegant Graphics for Data Analysis*](https://ggplot2-book.org/index.html) [Chapter 8: Annotations](https://ggplot2-book.org/annotations.html)
 
 ## Meeting Videos {-}
 
