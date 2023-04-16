@@ -2,12 +2,553 @@
 
 **Learning objectives:**
 
-- THESE ARE NICE TO HAVE BUT NOT ABSOLUTELY NECESSARY
+- We are going to learn how to use bivarate graph to draw insight from our data.
 
-## SLIDE 1 {-}
+## Introduction
+Bivariate graphs display the relationship between two variables. 
 
-- ADD SLIDES AS SECTIONS (`##`).
-- TRY TO KEEP THEM RELATIVELY SLIDE-LIKE; THESE ARE NOTES, NOT THE BOOK ITSELF.
+- The type of graph will depend on the measurement level of the variables (categorical or quantitative).
+
+## Stacked bar chart
+
+```{r}
+library(ggplot2)
+
+# stacked bar chart
+ggplot(mpg, 
+       aes(x = class, 
+           fill = drv)) + 
+  geom_bar(position = "stack")
+```
+
+## Grouped bar chart
+
+Grouped bar charts place bars for the second categorical variable side-by-side. 
+
+- To create a grouped bar plot use the position = "dodge" option.
+
+```{r}
+library(ggplot2)
+
+# grouped bar plot
+ggplot(mpg, 
+       aes(x = class, 
+           fill = drv)) + 
+  geom_bar(position = "dodge")
+```
+
+- Notice that all Minivans are front-wheel drive. By default, zero count bars are dropped and the remaining bars are made wider. This may not be the behavior you want. You can modify this using the position = position_dodge(preserve = "single")" option.
+
+```{r}
+library(ggplot2)
+
+# grouped bar plot preserving zero count bars
+ggplot(mpg, 
+    aes(x = class, 
+    fill = drv)) + 
+  geom_bar(position = position_dodge(preserve = "single"))
+```
+
+- Note that this option is only available in the latest development version of ggplot2, but should be generally available shortly.
+
+## Segmented bar chart
+
+A segmented bar plot is a stacked bar plot where each bar represents 100 percent. You can create a segmented bar chart using the position = "filled" option.
+
+```{r}
+library(ggplot2)
+
+# bar plot, with each bar representing 100%
+ggplot(mpg, 
+       aes(x = class, 
+           fill = drv)) + 
+  geom_bar(position = "fill") +
+  labs(y = "Proportion")
+```
+
+## Improving the color and labeling
+
+```{r}
+library(ggplot2)
+
+# bar plot, with each bar representing 100%, 
+# reordered bars, and better labels and colors
+library(scales)
+ggplot(mpg, 
+  aes(x = factor(class,
+  levels = c("2seater", "subcompact", 
+  "compact", "midsize", "minivan", "suv", "pickup")), fill = factor(drv, 
+levels = c("f", "r", "4"),
+labels = c("front-wheel", "rear-wheel", 
+          "4-wheel")))) + 
+  geom_bar(position = "fill") +
+  scale_y_continuous(breaks = seq(0, 1, .2), 
+                     label = percent) +
+  scale_fill_brewer(palette = "Set2") +
+  labs(y = "Percent", 
+       fill = "Drive Train",
+       x = "Class",
+       title = "Automobile Drive by Class") +
+  theme_minimal()
+```
+
+
+
+```{r}
+# create a summary dataset
+library(dplyr)
+plotdata <- mpg %>%
+  group_by(class, drv) %>%
+  summarize(n = n()) %>% 
+  mutate(pct = n/sum(n),
+         lbl = scales::percent(pct))
+
+plotdata
+
+
+ggplot(plotdata, 
+  aes(x = factor(class,
+  levels = c("2seater", "subcompact", 
+  "compact", "midsize", "minivan", "suv", "pickup")),y = pct,
+  fill = factor(drv, levels = c("f", "r", "4"),
+  labels = c("front-wheel","rear-wheel", 
+  "4-wheel")))) + 
+  geom_bar(stat = "identity",
+           position = "fill") +
+  scale_y_continuous(breaks = seq(0, 1, .2), 
+                     label = percent) +
+  geom_text(aes(label = lbl), 
+            size = 3, 
+            position = position_stack(vjust = 0.5)) +
+  scale_fill_brewer(palette = "Set2") +
+  labs(y = "Percent", 
+       fill = "Drive Train",
+       x = "Class",
+       title = "Automobile Drive by Class") +
+  theme_minimal()
+```
+
+## Scatterplot
+
+The simplest display of two quantitative variables is a scatterplot, with each variable represented on an axis. For example, using the Salaries dataset, we can plot experience (yrs.since.phd) vs. academic salary (salary) for college professors.
+
+```{r}
+library(ggplot2)
+data(Salaries, package="carData")
+
+# simple scatterplot
+ggplot(Salaries, 
+       aes(x = yrs.since.phd, 
+           y = salary)) +
+  geom_point()
+```
+
+```{r}
+# enhanced scatter plot
+ggplot(Salaries, 
+       aes(x = yrs.since.phd, 
+           y = salary)) +
+  geom_point(color="cornflowerblue", 
+             size = 2, 
+             alpha=.8) +
+  scale_y_continuous(label = scales::dollar, 
+                     limits = c(50000, 250000)) +
+  scale_x_continuous(breaks = seq(0, 60, 10), 
+                     limits=c(0, 60)) + 
+  labs(x = "Years Since PhD",
+       y = "",
+       title = "Experience vs. Salary",
+       subtitle = "9-month salary for 2008-2009")
+```
+
+
+## Adding best fit lines
+
+It is often useful to summarize the relationship displayed in the scatterplot, using a best fit line. Many types of lines are supported, including linear, polynomial, and nonparametric (loess). By default, 95% confidence limits for these lines are displayed.
+
+```{r}
+# scatterplot with linear fit line
+ggplot(Salaries,
+       aes(x = yrs.since.phd, 
+           y = salary)) +
+  geom_point(color= "steelblue") +
+  geom_smooth(method = "lm")
+```
+
+```{r}
+# scatterplot with quadratic line of best fit
+ggplot(Salaries, 
+       aes(x = yrs.since.phd, 
+           y = salary)) +
+  geom_point(color= "steelblue") +
+  geom_smooth(method = "lm", 
+              formula = y ~ poly(x, 2), 
+              color = "indianred3")
+```
+
+## Line plot
+
+When one of the two variables represents time, a line plot can be an effective method of displaying relationship. For example, the code below displays the relationship between time (year) and life expectancy (lifeExp) in the United States between 1952 and 2007. The data comes from the [gapminder dataset.](https://rkabacoff.github.io/datavis/Data.html#Gapminder)
+
+```{r}
+data(gapminder, package="gapminder")
+
+# Select US cases
+library(dplyr)
+plotdata <- filter(gapminder, 
+                   country == "United States")
+
+# simple line plot
+ggplot(plotdata, 
+       aes(x = year, 
+           y = lifeExp)) +
+  geom_line()
+```
+
+```{r}
+# line plot with points
+# and improved labeling
+ggplot(plotdata, 
+       aes(x = year, 
+           y = lifeExp)) +
+  geom_line(size = 1.5, 
+            color = "lightgrey") +
+  geom_point(size = 3, 
+             color = "steelblue") +
+  labs(y = "Life Expectancy (years)", 
+       x = "Year",
+       title = "Life expectancy changes over time",
+       subtitle = "United States (1952-2007)",
+       caption = "Source: http://www.gapminder.org/data/")
+```
+
+
+## Bar chart (on summary statistics)
+
+In previous sections, bar charts were used to display the number of cases by category for a single variable or for two variables. You can also use bar charts to display other summary statistics (e.g., means or medians) on a quantitative variable for each level of a categorical variable.
+
+
+```{r}
+data(Salaries, package="carData")
+
+# calculate mean salary for each rank
+library(dplyr)
+plotdata <- Salaries %>%
+  group_by(rank) %>%
+  summarize(mean_salary = mean(salary))
+
+# plot mean salaries
+ggplot(plotdata, 
+       aes(x = rank, 
+           y = mean_salary)) +
+  geom_bar(stat = "identity")
+```
+
+```{r}
+# plot mean salaries in a more attractive fashion
+library(scales)
+ggplot(plotdata, 
+       aes(x = factor(rank,
+                      labels = c("Assistant\nProfessor",
+                                 "Associate\nProfessor",
+                                 "Full\nProfessor")), 
+                      y = mean_salary)) +
+  geom_bar(stat = "identity", 
+           fill = "cornflowerblue") +
+  geom_text(aes(label = dollar(mean_salary)), 
+            vjust = -0.25) +
+  scale_y_continuous(breaks = seq(0, 130000, 20000), 
+                     label = dollar) +
+  labs(title = "Mean Salary by Rank", 
+       subtitle = "9-month academic salary for 2008-2009",
+       x = "",
+       y = "")
+```
+
+## Grouped kernel density plots
+
+We can compare groups on a numeric variable by superimposing kernel density plots in a single graph.
+
+```{r}
+# plot the distribution of salaries 
+# by rank using kernel density plots
+ggplot(Salaries, 
+       aes(x = salary, 
+           fill = rank)) +
+  geom_density(alpha = 0.4) +
+  labs(title = "Salary distribution by rank")
+```
+
+## Box plots
+
+```{r}
+# plot the distribution of salaries by rank using boxplots
+ggplot(Salaries, 
+       aes(x = rank, 
+           y = salary)) +
+  geom_boxplot() +
+  labs(title = "Salary distribution by rank")
+```
+
+```{r}
+# plot the distribution of salaries by rank using boxplots
+ggplot(Salaries, aes(x = rank, 
+                     y = salary)) +
+  geom_boxplot(notch = TRUE, 
+               fill = "cornflowerblue", 
+               alpha = .7) +
+  labs(title = "Salary distribution by rank")
+```
+
+## Violin plots
+
+Violin plots are similar to kernel density plots, but are mirrored and rotated 90 degrees.
+
+```{r}
+# plot the distribution of salaries 
+# by rank using violin plots
+ggplot(Salaries, 
+       aes(x = rank,
+           y = salary)) +
+  geom_violin() +
+  labs(title = "Salary distribution by rank")
+```
+
+
+- A useful variation is to superimpose boxplots on violin plots.
+
+```{r}
+# plot the distribution using violin and boxplots
+ggplot(Salaries, 
+       aes(x = rank, 
+           y = salary)) +
+  geom_violin(fill = "cornflowerblue") +
+  geom_boxplot(width = .2, 
+               fill = "orange",
+               outlier.color = "orange",
+               outlier.size = 2) + 
+  labs(title = "Salary distribution by rank")
+```
+
+
+## Ridgeline plots
+
+A ridgeline plot (also called a joyplot) displays the distribution of a quantitative variable for several groups. They’re similar to kernel density plots with vertical faceting, but take up less room. Ridgeline plots are created with the ggridges package.
+
+```{r}
+# create ridgeline graph
+library(ggplot2)
+library(ggridges)
+
+ggplot(mpg, 
+       aes(x = cty, 
+           y = class, 
+           fill = class)) +
+  geom_density_ridges() + 
+  theme_ridges() +
+  labs("Highway mileage by auto class") +
+  theme(legend.position = "none")
+```
+
+## Mean/SEM plots
+
+
+```{r}
+# calculate means, standard deviations,
+# standard errors, and 95% confidence 
+# intervals by rank
+library(dplyr)
+plotdata <- Salaries %>%
+  group_by(rank) %>%
+  summarize(n = n(),
+         mean = mean(salary),
+         sd = sd(salary),
+         se = sd / sqrt(n),
+         ci = qt(0.975, df = n - 1) * sd / 
+        sqrt(n))
+
+
+
+
+
+# plot the means and standard errors
+ggplot(plotdata, 
+       aes(x = rank, 
+           y = mean, 
+           group = 1)) +
+  geom_point(size = 3) +
+  geom_line() +
+  geom_errorbar(aes(ymin = mean - se, 
+                    ymax = mean + se), 
+                width = .1)
+```
+
+```{r}
+# calculate means and standard errors by rank and sex
+plotdata <- Salaries %>%
+  group_by(rank, sex) %>%
+  summarize(n = n(),
+            mean = mean(salary),
+            sd = sd(salary),
+            se = sd/sqrt(n))
+
+# plot the means and standard errors by sex
+ggplot(plotdata, aes(x = rank,
+                     y = mean, 
+                     group=sex, 
+                     color=sex)) +
+  geom_point(size = 3) +
+  geom_line(size = 1) +
+  geom_errorbar(aes(ymin  =mean - se, 
+                    ymax = mean+se), 
+                width = .1)
+```
+
+- Unfortunately, the error bars overlap. We can dodge the horizontal positions a bit to overcome this.
+
+```{r}
+# plot the means and standard errors by sex (dodged)
+pd <- position_dodge(0.2)
+ggplot(plotdata, 
+       aes(x = factor(rank, 
+                      labels = c("Assistant\nProfessor",
+                                 "Associate\nProfessor",
+                                 "Full\nProfessor")), 
+           y = mean, 
+           group=sex, 
+           color=sex)) +
+  geom_point(position=pd, 
+             size = 3) +
+  geom_line(position = pd, 
+            size = 1) +
+  geom_errorbar(aes(ymin = mean - se, 
+                    ymax = mean + se), 
+                width = .1, 
+                position = pd, 
+                size = 1) +
+  scale_y_continuous(label = scales::dollar) +
+  scale_color_brewer(palette="Set1") +
+  theme_minimal() +
+  labs(title = "Mean salary by rank and sex",
+       subtitle = "(mean +/- standard error)",
+       x = "", 
+       y = "",
+       color = "Gender")
+```
+
+## Strip plots
+
+The relationship between a grouping variable and a numeric variable can be displayed with a scatter plot. For example
+
+```{r}
+# plot the distribution of salaries 
+# by rank using strip plots
+ggplot(Salaries, 
+       aes(y = rank, 
+           x = salary)) +
+  geom_point() + 
+  labs(title = "Salary distribution by rank")
+```
+
+
+```{r}
+# plot the distribution of salaries
+# by rank using jittering
+ggplot(Salaries, 
+       aes(y = rank, 
+           x = salary)) +
+  geom_jitter() + 
+  labs(title = "Salary distribution by rank")
+```
+
+- It is easier to compare groups if we use color
+
+```{r}
+# plot the distribution of salaries 
+# by rank using jittering
+library(scales)
+ggplot(Salaries, 
+       aes(y = factor(rank,
+                      labels = c("Assistant\nProfessor",
+                                 "Associate\nProfessor",
+                                 "Full\nProfessor")), 
+           x = salary, 
+           color = rank)) +
+  geom_jitter(alpha = 0.7,
+              size = 1.5) + 
+  scale_x_continuous(label = dollar) +
+  labs(title = "Academic Salary by Rank", 
+       subtitle = "9-month salary for 2008-2009",
+       x = "",
+       y = "") +
+  theme_minimal() +
+  theme(legend.position = "none")
+
+```
+
+## Beeswarm Plots
+
+Beeswarm plots (also called violin scatter plots) are similar to jittered scatterplots, in that they display the distribution of a quantitative variable by plotting points in way that reduces overlap. In addition, they also help display the density of the data at each point (in a manner that is similar to a violin plot).
+
+
+```{r}
+# plot the distribution of salaries 
+# by rank using beewarm-syle plots
+library(ggbeeswarm)
+library(scales)
+ggplot(Salaries, 
+       aes(x = factor(rank,
+                      labels = c("Assistant\nProfessor",
+                                 "Associate\nProfessor",
+                                 "Full\nProfessor")), 
+           y = salary, 
+           color = rank)) +
+  geom_quasirandom(alpha = 0.7,
+                   size = 1.5) + 
+  scale_y_continuous(label = dollar) +
+  labs(title = "Academic Salary by Rank", 
+       subtitle = "9-month salary for 2008-2009",
+       x = "",
+       y = "") +
+  theme_minimal() +
+  theme(legend.position = "none")
+```
+
+
+## Cleveland Dot Charts
+
+Cleveland plots are useful when you want to compare a numeric statistic for a large number of groups.
+
+```{r}
+data(gapminder, package="gapminder")
+
+# subset Asian countries in 2007
+library(dplyr)
+plotdata <- gapminder %>%
+  filter(continent == "Asia" & 
+         year == 2007)
+
+
+# Fancy Cleveland plot
+ggplot(plotdata, 
+       aes(x=lifeExp, 
+           y=reorder(country, lifeExp))) +
+  geom_point(color="blue", 
+             size = 2) +
+  geom_segment(aes(x = 40, 
+               xend = lifeExp, 
+               y = reorder(country, lifeExp), 
+               yend = reorder(country, lifeExp)),
+               color = "lightgrey") +
+  labs (x = "Life Expectancy (years)",
+        y = "",
+        title = "Life Expectancy by Country",
+        subtitle = "GapMinder data for Asia - 2007") +
+  theme_minimal() + 
+  theme(panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank())
+
+```
 
 ## Meeting Videos {-}
 
