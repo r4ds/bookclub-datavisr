@@ -4,6 +4,10 @@
 
 - THESE ARE NICE TO HAVE BUT NOT ABSOLUTELY NECESSARY
 
+- Objective 1
+
+- Objective 2
+
 ## SLIDE 1 {-}
 
 - ADD SLIDES AS SECTIONS (`##`).
