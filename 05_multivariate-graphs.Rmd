@@ -11,7 +11,8 @@
 - Here, we are looking at the `Salaries` data from the `carData` package
 ```{r}
 library(pacman)
-p_load(ggplot2, dplyr)
+p_load(ggplot2, dplyr) 
+
 data(Salaries, package="carData")
 
 ggplot(Salaries, aes(x=yrs.since.phd,
@@ -52,7 +53,7 @@ ggplot(Salaries, aes(x=yrs.since.phd,
 ```{r}
 ggplot(Salaries, aes(x=yrs.since.phd,
                      y=salary,
-                     color=rank, size=yrs.service)) + 
+                      size=yrs.service)) + 
   # alpha allows you to change transparency
   # of points
   geom_point(alpha=0.6) + 
@@ -91,6 +92,7 @@ ggplot(Salaries,
 - Formula for facet wrapping is 
 ```{r}
 ggplot(Salaries, aes(x = salary)) +
+  
   geom_histogram(fill = "cornflowerblue",
                  color = "white") +
   facet_wrap(~rank, ncol = 1) +
