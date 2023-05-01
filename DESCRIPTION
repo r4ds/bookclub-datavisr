@@ -10,9 +10,12 @@ Depends:
 Imports: 
     bookdown,
     carData,
+    choroplethr,
+    choroplethrMaps,
     dplyr,
     gapminder,
     ggbeeswarm,
+    ggmap,
     ggplot2,
     ggridges,
     grid,
