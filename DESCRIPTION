@@ -15,6 +15,7 @@ Imports:
     dplyr,
     gapminder,
     ggbeeswarm,
+    ggcorrplot,
     ggmap,
     ggplot2,
     ggridges,
@@ -25,7 +26,10 @@ Imports:
     png,
     rmarkdown,
     scales,
+    survminer,
     tibble,
     tidyr,
-    treemapify
+    treemapify,
+    vcd,
+    visreg
 Encoding: UTF-8
