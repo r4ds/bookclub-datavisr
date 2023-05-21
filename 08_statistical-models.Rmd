@@ -43,11 +43,11 @@ ggcorrplot(r)
 
 The `ggcorrplot` function has a number of options for customizing the output. For example,
 
--  `hc.order` = TRUE reorders the variables, placing variables with similar correlation patterns together.
+-  `hc.order = TRUE` reorders the variables, placing variables with similar correlation patterns together.
 
-- `type` = "lower" plots the lower portion of the correlation matrix.
+- `type = "lower"` plots the lower portion of the correlation matrix.
 
-- `lab` = TRUE overlays the correlation coefficients (as text) on the plot.
+- `lab = TRUE` overlays the correlation coefficients (as text) on the plot.
 
 ```{r 08-03}
 ggcorrplot(r, 
@@ -98,7 +98,7 @@ visreg(houses_lm, "livingArea", gg = TRUE)
 
 - Continuing the example, the price difference between waterfront and non-waterfront homes is plotted, controlling for the other seven variables. 
 
-- Since a ggplot2 graph is produced, other ggplot2 functions can be added to customize the graph.
+- Since a `ggplot2` graph is produced, other `ggplot2` functions can be added to customize the graph.
 
 ```{r 08-06}
 # conditional plot of price vs. waterfront location
@@ -160,7 +160,7 @@ visreg(cps85_glm, "age",
 
 ## Visualizing multiple conditional logistic regression plots
 
-- We can create multiple conditional plots by adding a by option. 
+- We can create multiple conditional plots by adding a `by` option. 
 
 - The following code plots the probability of being married given age, seperately for men and women (`by="sex"`), controlling for race and job sector.
 
@@ -187,7 +187,7 @@ visreg(cps85_glm, "age",
 
 - If the event has not occurred for an observation (either because the study ended or the patient dropped out) the observation is said to be *censored*.
 
-- The [NCCTG Lung Cancer](https://rkabacoff.github.io/datavis/Data.html#Lung) dataset in the survival package provides data on the survival times of patients with advanced lung cancer following treatment for up to 34 months. 
+- The [NCCTG Lung Cancer](https://rkabacoff.github.io/datavis/Data.html#Lung) dataset in the `survival` package provides data on the survival times of patients with advanced lung cancer following treatment for up to 34 months. 
 
 - The outcome for each patient is measured by two variables (1) *time*,  survival time in days, (2) *status*, 1 = censored, 2 = dead.
 
