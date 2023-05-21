@@ -6,6 +6,16 @@
 
 ## Correlation plots
 
+- [Correlation coefficients](https://www.statisticshowto.com/probability-and-statistics/correlation-coefficient-formula/) are used to measure how strong a relationship is between two variables. 
+
+- There are several types of correlation coefficient, but the most popular is Pearson’s Product-Moment correlation coefficient, which is commonly used in linear regression. 
+
+- Correlation plots help you to visualize the pairwise relationships between a set of quantitative variables by displaying their correlations using color or shading.
+
+## Saratoga Houses Dataset  
+
+- Let's look at the [Saratoga Houses dataset](https://rkabacoff.github.io/datavis/Data.html#SaratogaHousing), which contains the sale price and characteristics of Saratoga County, NY homes in 2006 in order to explore the relationships among the quantitative variables,
+
 ```{r 08-01}
 data(SaratogaHouses, package="mosaicData")
 
@@ -17,7 +27,11 @@ r <- cor(df, use="complete.obs")
 round(r,2)
 ```
 
-##
+## [`ggcorrplot`](https://www.rdocumentation.org/packages/ggcorrplot/versions/0.1.1/topics/ggcorrplot) package
+
+- The `ggcorrplot` function in the `ggcorrplot` package can be used to visualize these correlations. 
+
+- By default, it creates a `ggplot2` graph were darker red indicates stronger positive correlations, darker blue indicates stronger negative correlations and white indicates no correlation.
 
 ```{r 08-02}
 library(ggplot2)
@@ -25,7 +39,15 @@ library(ggcorrplot)
 ggcorrplot(r)
 ```
 
-##
+## `ggcorrplot` function
+
+The ggcorrplot function has a number of options for customizing the output. For example,
+
+-  `hc.order` = TRUE reorders the variables, placing variables with similar correlation patterns together.
+
+- `type` = "lower" plots the lower portion of the correlation matrix.
+
+- `lab` = TRUE overlays the correlation coefficients (as text) on the plot.
 
 ```{r 08-03}
 ggcorrplot(r, 
@@ -37,6 +59,10 @@ ggcorrplot(r,
 
 ## Linear Regression
 
+- [Linear regression](https://towardsdatascience.com/linear-regression-detailed-view-ea73175f6e86) allows us to explore the relationship between a quantitative response variable and an explanatory variable while other variables are held constant.
+
+- Below is a model to predict home prices, the response variable, by the explanatory variables, lot size ($ft^2$), age (yrs), land value ($\$1000s$), living area ($ft^2$), number of bedrooms and bathrooms and whether the home is on the waterfront or not.
+
 ```{r 08-04}
 data(SaratogaHouses, package="mosaicData")
 houses_lm <- lm(price ~ lotSize + age + landValue +
@@ -45,7 +71,17 @@ houses_lm <- lm(price ~ lotSize + age + landValue +
                 data = SaratogaHouses)
 ```
 
-##
+- We estimate that an increase of one square foot of living area is associated with a home price increase of $\$75$, holding the other variables constant. 
+
+- We estimate that a waterfront home costs approximately $\$120,726$ more than non-waterfront home, again controlling for the other variables in the model.
+
+## [`visreg`](http://pbreheny.github.io/visreg/index.html) package 
+
+- The `visreg` package provides tools for visualizing these conditional relationships.
+
+- The `visreg` function takes (1) the model and (2) the variable of interest and plots the conditional relationship, controlling for the other variables. 
+
+- The option `gg = TRUE` is used to produce a `ggplot2` graph.
 
 ```{r 08-05}
 # conditional plot of price vs. living area
@@ -54,7 +90,13 @@ library(visreg)
 visreg(houses_lm, "livingArea", gg = TRUE) 
 ```
 
-##
+- The graph suggests that, holding all else equal, sales price increases with living area in a linear fashion.
+
+## Another linear regression example
+
+- Continuing the example, the price difference between waterfront and non-waterfront homes is plotted, controlling for the other seven variables. 
+
+- Since a ggplot2 graph is produced, other ggplot2 functions can be added to customize the graph.
 
 ```{r 08-06}
 # conditional plot of price vs. waterfront location
@@ -67,8 +109,21 @@ visreg(houses_lm, "waterfront", gg = TRUE) +
        x = "Waterfront")
 ```
 
+- We see that there are far fewer homes on the water, and they tend to be more expensive (even controlling for size, age, and land value).
 
-## Logistic Regression
+## [Logistic Regression](https://towardsdatascience.com/introduction-to-logistic-regression-66248243c148)
+
+- Logistic regression can be used to explore the relationship between a binary response variable and an explanatory variable while other variables are held constant. 
+
+- Binary response variables have two levels (yes/no, lived/died, pass/fail, malignant/benign). 
+
+- As with linear regression, we can use the `visreg` package to visualize these relationships.
+
+## [CPS85 dataset](https://rkabacoff.github.io/datavis/Data.html#CPS85) and linear regression
+
+- The CPS85 dataset from the `mosaicData` package, contains 1985 data on wages and other characteristics of workers.
+
+- Using the CPS85 data let’s predict the [log-odds](https://towardsdatascience.com/https-towardsdatascience-com-what-and-why-of-log-odds-64ba988bf704) of being married, given one’s sex, age, race and job sector.
 
 ```{r 08-07}
 # fit logistic model for predicting
@@ -79,7 +134,11 @@ cps85_glm <- glm(married ~ sex + age + race + sector,
                  data=CPS85)
 ```
 
-##
+## Visualizinglogisitc regression 
+
+- Using the fitted model, we visualize the relationship between age and the probability of being married, holding the other variables constant. 
+
+- The `scale = "response"` option creates a plot based on a probability (rather than log-odds) scale.
 
 ```{r 08-08}
 # plot results
@@ -95,7 +154,13 @@ visreg(cps85_glm, "age",
        caption = "source: Current Population Survey 1985")
 ```
 
-## 
+- Here we see that the probability of being married is estimated to be roughly 0.5 at age 20 and decreases to 0.1 at age 60, controlling for the other variables.
+
+## Visualizing multiple conditional logistic regression plots
+
+- We can create multiple conditional plots by adding a by option. 
+
+- The following code plots the probability of being married given age, seperately for men and women (`by="sex"`), controlling for race and job sector.
 
 ```{r 08-09}
 # plot results
@@ -112,8 +177,25 @@ visreg(cps85_glm, "age",
        caption = "source: Current Population Survey 1985")
 ```
 
+- In this data, the probability of marriage is very similar for men and women.
 
-## Survival Plots
+## [Survival Analysis](https://towardsdatascience.com/the-complete-introduction-to-survival-analysis-in-python-7523e17737e6)
+
+- In many research settings, especially healthcare research, the response variable is the time to an event i.e. time to recovery, time to death, or time to relapse.
+
+- If the event has not occurred for an observation (either because the study ended or the patient dropped out) the observation is said to be *censored*.
+
+- The [NCCTG Lung Cancer](https://rkabacoff.github.io/datavis/Data.html#Lung) dataset in the survival package provides data on the survival times of patients with advanced lung cancer following treatment for up to 34 months. 
+
+- The outcome for each patient is measured by two variables (1) *time*,  survival time in days, (2) *status*, 1 = censored, 2 = dead.
+
+- Thus a patient with time = 305 & status = 2 lived 305 days following treatment. Another patient with time = 400 & status = 1, lived at least 400 days but then dropped out of the study. A patient with time = 1022 & status = 1, survived to the end of the study (34 months).
+
+
+## Survival Plots using [`ggsurvplot`](https://exts.ggplot2.tidyverse.org/gallery/)
+
+- A survival plot (also called a Kaplan-Meier Curve) can be used to illustrates the probability that an individual survives up to and including time *t*.
+
 
 ```{r 08-10, warning=FALSE, message=FALSE}
 # plot survival curve
@@ -126,7 +208,16 @@ ggsurvplot(sfit,
             title="Kaplan-Meier curve for lung cancer survival") 
 ```
 
-##
+- Roughly 50% of patients are still alive 300 days post treatment. 
+
+- We can run `summary(sfit)` for more details.
+
+
+## Comparing survival probabilities
+
+- It is frequently of great interest whether groups of patients have the same survival probabilities. 
+
+- In this graph, the survival curve for men and women are compared.
 
 ```{r 08-11}
 # plot survival curve for men and women
@@ -141,9 +232,15 @@ ggsurvplot(sfit,
            xlab = "Time (days)")
 ```
 
+- A couple `ggsurvplot` options: (1) `conf.int` provides confidence intervals, (2) `pval` provides a log-rank test comparing the survival curves.
 
+- The p-value (0.0013) provides strong evidence that men and women have different survival probabilities following treatment.
 
 ## Mosaic Plots
+
+- Mosaic charts can display the relationship between categorical variables using rectangles whose areas represent the proportion of cases for any given combination of levels.
+
+- He we look at the [Titanic dataset](https://rkabacoff.github.io/datavis/Data.html#Titanic) and visualize the relationship between the three categorical variables in the code below.
 
 ```{r 08-12, message=FALSE}
 # input data
@@ -155,7 +252,14 @@ tbl <- xtabs(~Survived + Class + Sex, titanic)
 ftable(tbl)
 ```
 
-##
+
+## Mosaic plots and the `vcd` package
+
+- Although mosaic charts can be created with `ggplot2` using the [`ggmosaic`](https://cran.r-project.org/web/packages/ggmosaic/vignettes/ggmosaic.html) package, the author recommends using the `vcd` package instead, which won’t create `ggplot2` graphs, but provides a more comprehensive approach to visualizing categorical data.
+
+- In a mosaic plot, the size of the tile is proportional to the percentage of cases in that combination of levels. 
+
+- For example, as seen below, more Titanic passengers perished than survived, and those that perished were primarily 3rd class male passengers and male crew (the largest group).
 
 ```{r 08-13, message=FALSE}
 # create a mosaic plot from the table
@@ -164,7 +268,13 @@ mosaic(tbl, main = "Titanic data")
 ```
 
 
-##
+## Adding color to mosaic plot
+
+- In mosaic plots, the color of the tiles can also be used to indicate the degree relationship among the variables.
+
+- If we assume that these three variables are independent, we can examine the residuals (the error between a predicted value and the observed actual value) from the model and shade the tiles to match. 
+
+- In the graph below, dark blue represents more cases than expected given independence, and dark red represents less cases than expected if independence holds.
 
 ```{r 08-14}
 mosaic(tbl, 
@@ -178,6 +288,22 @@ mosaic(tbl,
                          Sex = c("F", "M")),
        main = "Titanic data")
 ```
+
+- We can see that if class, gender, and survival are independent, we are seeing many more male crew perishing, and 1st, 2nd and 3rd class females surviving than would be expected. 
+
+- Conversely, far fewer 1st class passengers (both male and female) died than would be expected by chance, thus the assumption of independence is rejected. 
+
+- NOTE: For complicated tables, labels can easily overlap. See [`labeling_border`](https://www.rdocumentation.org/packages/vcd/versions/1.4-4/topics/labeling_border), for plotting options.
+
+## Resources
+
+- [R Graph Gallery: Correlogram](https://r-graph-gallery.com/correlogram.html)
+
+- [ggplot2 extension gallery](https://exts.ggplot2.tidyverse.org/gallery/)
+
+- The [`lm`](https://www.rdocumentation.org/packages/stats/versions/3.6.2/topics/lm) function is used to fit linear models. It can be used to carry out regression, single stratum analysis of variance and analysis of covariance (although aov may provide a more convenient interface for these).
+
+- The [`glm`](https://www.rdocumentation.org/packages/stats/versions/3.6.2/topics/glm) function is used to fit generalized linear models, specified by giving a symbolic description of the linear predictor and a description of the error distribution.
 
 
 ## Meeting Videos {-}
