@@ -41,7 +41,7 @@ ggcorrplot(r)
 
 ## `ggcorrplot` function
 
-The ggcorrplot function has a number of options for customizing the output. For example,
+The `ggcorrplot` function has a number of options for customizing the output. For example,
 
 -  `hc.order` = TRUE reorders the variables, placing variables with similar correlation patterns together.
 
@@ -69,6 +69,8 @@ houses_lm <- lm(price ~ lotSize + age + landValue +
                   livingArea + bedrooms + bathrooms +
                   waterfront, 
                 data = SaratogaHouses)
+
+summary(houses_lm)$coefficients
 ```
 
 - We estimate that an increase of one square foot of living area is associated with a home price increase of $\$75$, holding the other variables constant. 
@@ -134,7 +136,7 @@ cps85_glm <- glm(married ~ sex + age + race + sector,
                  data=CPS85)
 ```
 
-## Visualizinglogisitc regression 
+## Visualizing logistic regression 
 
 - Using the fitted model, we visualize the relationship between age and the probability of being married, holding the other variables constant. 
 
