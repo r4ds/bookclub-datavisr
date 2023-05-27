@@ -47,4 +47,6 @@ Imports:
     wordcloud,
     wordcloud2,
     XML
+Remotes:
+    ricardo-bion/ggradar 
 Encoding: UTF-8
