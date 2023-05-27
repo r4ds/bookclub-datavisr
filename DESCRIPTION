@@ -17,6 +17,7 @@ Imports:
     gapminder,
     ggalluvial,
     GGally,
+    ggradar,
     ggbeeswarm,
     ggcorrplot,
     ggmap,
