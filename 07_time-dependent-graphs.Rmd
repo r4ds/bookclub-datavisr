@@ -1,24 +1,371 @@
+---
+editor_options: 
+  markdown: 
+    wrap: 72
+---
+
 # Time-dependent graphs
 
-**Learning objectives:**
+**Learning objective:**
 
-- THESE ARE NICE TO HAVE BUT NOT ABSOLUTELY NECESSARY
+-   Discover different types of graphs for time series analysis
 
-## SLIDE 1 {-}
+## Time Series
 
-- ADD SLIDES AS SECTIONS (`##`).
-- TRY TO KEEP THEM RELATIVELY SLIDE-LIKE; THESE ARE NOTES, NOT THE BOOK ITSELF.
+**Time-dependent graph** is a graph that structure changes with time.
 
-## Meeting Videos {-}
+**Time Series Analysis** is used to see how data behaves over a period
+of time.
 
-### Cohort 1 {-}
+-   By using time series analysis, we can see seasonality change or
+    cyclic behavior in the data
+
+-   **Time Series Data** is observations indexed by time
+
+## Economics Dataset
+
+`economics` dataset comes from `ggplot2` package.
+
+-   It contains US monthly economic data collected from January 1967
+    through January 2015.
+
+## Simple Line Plot
+
+Let's plot personal savings rate using simple line plot.
+
+-   `x = date`, `y = psavert`
+
+```{r}
+# load library
+library(ggplot2)
+
+ggplot(economics, aes(x = date, y = psavert)) +
+  geom_line() +
+  labs(title = "Personal Savings Rate",
+       x = "Date",
+       y = "Personal Savings Rate")
+```
+
+## Simple Line Plot +
+
+Let us modify the previous graph.
+
+-   `scale_x_date()` function from `scales` package can be used to
+    reformat dates.
+
+-   `theme_minimal()` is a function and it removes all background
+    elements and reduces the axis lines and ticks to a minimum.
+
+## Modified Simple Line Plot
+
+```{r warning=FALSE, message=FALSE}
+# load library
+library(ggplot2)
+library(scales)
+
+ggplot(economics, aes(x = date, y = psavert)) +
+  geom_line(color = "indianred3", 
+            size=1 ) +
+  geom_smooth() +
+  scale_x_date(date_breaks = '5 year', 
+               labels = date_format("%b-%y")) +
+  labs(title = "Personal Savings Rate",
+       subtitle = "1967 to 2015",
+       x = "",
+       y = "Personal Savings Rate") +
+  theme_minimal()
+```
+
+## scale\_\*\_date Function
+
+`scale_x_date()` `scale_y_date()` from `scales` package
+
+Main parameters: `date_breaks()` `labels = date_format()`
+
+-   *date_breaks()* is used to set the positions of the tick marks on
+    the x-axis of a plot
+
+-   *date_breaks()* function takes one argument, which is the unit of
+    time
+
+For example, we can use *date_breaks()* like this
+
+date_breaks("1 year")
+
+date_breaks("6 months")
+
+date_breaks("1 week")
+
+date_breaks("10 days")
+
+-   *date_format()* function takes a single argument, which is a string
+    that specifies the desired format of the date
+
+For example,
+
+date_format("%Y-%m-%d"): YYYY-MM-DD
+
+date_format("%Y"): YYYY
+
+date_format("%B"): Full month name (January, February, etc.)
+
+date_format("%b"): Abbreviated month name (Jan, Feb, etc.)
+
+date_format("%d"): Two-digit day of the month (01, 02, ..., 30, 31)
+
+date_format("%A"): Full weekday name (Sunday, Monday, Tuesday, etc.)
+
+date_format("%a"): Abbreviated weekday name (Sun, Mon, Tue, etc.)
+
+more info:
+
+[Scale_Date](https://ggplot2.tidyverse.org/reference/scale_date.html)
+
+[Date_Format](https://www.rdocumentation.org/packages/base/versions/3.6.2/topics/strptime)
+
+## Dumbbell Charts
+
+-   **Dumbbell chart** is used to display the change between two time
+    points for several groups or observations.
+
+-   `geom_dumbbell()` function from `ggalt` package can be used
+
+-   **Wide Format** dataset is used in this type of chart
+
+
+## Long and Wide Format
+
+[Long and Wide Formats in
+Data](https://towardsdatascience.com/long-and-wide-formats-in-data-explained-e48d7c9a06cb)
+
+![Long Format
+Dataset](images/Screenshot%202023-05-07%20at%2013.01.36.png)
+
+![Wide Format
+Dataset](images/Screenshot%202023-05-07%20at%2013.00.29.png)
+
+
+## Gapminder Dataset
+
+`gapminder` dataset comes from `gapminder` package.
+
+It is a subset of the [original data set](http://gapminder.org)
+
+-   It contains for each of 142 countries, it provides values for life
+    expectancy, GDP per capita, and population, every five years, from
+    1952 to 2007.
+
+## Dumbbell Charts
+
+Let's plot the change in life expectancy from 1952 to 2007 in the
+Americas.
+
+```{r warning=FALSE, message=FALSE}
+# load library
+library(ggalt)
+library(tidyr)
+library(dplyr)
+
+# load data
+data(gapminder, package = "gapminder")
+
+# subset data
+plotdata_long <- filter(gapminder,
+                        continent == "Americas" &
+                        year %in% c(1952, 2007)) %>%
+  select(country, year, lifeExp)
+
+# convert data to wide format
+plotdata_wide <- spread(plotdata_long, year, lifeExp)
+names(plotdata_wide) <- c("country", "y1952", "y2007")
+
+# create dumbbell plot
+ggplot(plotdata_wide, aes(y = country,
+                          x = y1952,
+                          xend = y2007)) +  
+  geom_dumbbell()
+```
+
+## Dumbbell Charts +
+
+Let's modify a previous graph to make it easier to read. In order to do
+so,
+
+-   Sort by the countries
+
+-   Change the color and size of lines and points
+
+-   Use `theme_minimal()` to minimize the theme
+
+## Modified Dumbbell Charts
+
+```{r}
+ggplot(plotdata_wide, 
+       aes(y = reorder(country, y1952),
+           x = y1952,
+           xend = y2007)) +  
+  geom_dumbbell(size = 1.2,
+                size_x = 3, 
+                size_xend = 3,
+                colour = "grey", 
+                colour_x = "blue", 
+                colour_xend = "red") +
+  theme_minimal() + 
+  labs(title = "Change in Life Expectancy",
+       subtitle = "1952 to 2007",
+       x = "Life Expectancy (years)",
+       y = "")
+```
+
+## Slope Graphs
+
+-   *Slope graph* is useful when there are several groups and several
+    time points.
+
+-   `newggslopegraph()` function from the `CGPfunctions` package
+
+## newggslopegraph Function
+
+`newggslopegraph()` function takaes parameters in order.
+
+newggslopegraph(*data frame*, *time variable*, *numeric variable*,
+*grouping variable*)
+
+-   **time variable** must be a factor
+
+-   **numeric variable** will be plotted on the y axis
+
+## Slope Graphs
+
+Let's plot life expectancy for six Central American countries in 1992,
+1997, 2002, and 2007.
+
+```{r}
+# load library
+library(CGPfunctions)
+
+# Select Central American countries data 
+# for 1992, 1997, 2002, and 2007
+
+df <- gapminder %>%
+  filter(year %in% c(1992, 1997, 2002, 2007) &
+           country %in% c("Panama", "Costa Rica", 
+                          "Nicaragua", "Honduras", 
+                          "El Salvador", "Guatemala",
+                          "Belize")) %>%
+  mutate(year = factor(year),
+         lifeExp = round(lifeExp)) 
+
+# create slope graph
+
+newggslopegraph(df, year, lifeExp, country) +
+  labs(title = "Life Expectancy by Country", 
+       subtitle = "Central America", 
+       caption = "source: gapminder")
+```
+
+## Area Charts
+
+-   **Area Charts** is basically a line graph, with a fill from the line
+    to the x-axis.
+    
+-   `geom_area()` is a function used to create an area plot. It is
+    similar to a line plot, but instead of connecting the data points
+    with a line, it fills in the area under the line.
+
+```{r}
+# basic area chart
+
+ggplot(economics, aes(x = date, y = psavert)) +
+  geom_area(fill="lightblue", color="black") +
+  labs(title = "Personal Savings Rate",
+       x = "Date",
+       y = "Personal Savings Rate")
+```
+
+## Stacked Area Chart
+
+-   **Stacked area chart** can be used to show differences between
+    groups over time.
+
+-   When interest is on both group change over time and overall change
+    over time
+
+## Uspopage Dataset
+
+`uspopage` dataset from the `gcookbook` package
+
+-   It contains age distribution of population in the United States,
+    1900-2002
+
+-   The values are estimated (not counted) by the U.S. Census
+
+## Stacked Area Chart
+
+Let's plot the age distribution of the US population from 1900 and 2002.
+
+```{r}
+# stacked area chart
+
+# load data
+data(uspopage, package = "gcookbook")
+
+ggplot(uspopage, aes(x = Year,
+                     y = Thousands, 
+                     fill = AgeGroup)) +
+  geom_area() +
+  labs(title = "US Population by age",
+       x = "Year",
+       y = "Population in Thousands")
+```
+
+## Scientific Notation
+
+How to change scientific notation such as $3e+05$ on the axis.
+
+-   We can use `ggplot2` to change the scale.
+
+1.  divide the Thousands variable by 1000
+
+2.  report its unit as Millions
+
+## Stacked Area Chart +
+
+-   `fct_rev()` function from the `forcats` package allows us to reverse
+    the levels of the specified variable
+
+## Modified Stacked Area Chart
+
+```{r}
+# load data
+data(uspopage, package = "gcookbook")
+
+ggplot(uspopage, aes(x = Year,
+                     y = Thousands/1000, 
+                     fill = forcats::fct_rev(AgeGroup))) +
+  geom_area(color = "black") +
+  labs(title = "US Population by age",
+       subtitle = "1900 to 2002",
+       caption = "source: U.S. Census Bureau, 2003, HS-3",
+       x = "Year",
+       y = "Population in Millions",
+       fill = "Age Group") +
+  scale_fill_brewer(palette = "Set2") +
+  theme_minimal()
+```
+
+## Meeting Videos {.unnumbered}
+
+### Cohort 1 {.unnumbered}
 
 `r knitr::include_url("https://www.youtube.com/embed/URL")`
 
 <details>
-<summary> Meeting chat log </summary>
 
-```
+<summary>Meeting chat log</summary>
+
+```         
 LOG
 ```
+
 </details>
