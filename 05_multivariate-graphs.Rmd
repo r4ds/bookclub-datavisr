@@ -2,12 +2,160 @@
 
 **Learning objectives:**
 
-- THESE ARE NICE TO HAVE BUT NOT ABSOLUTELY NECESSARY
+- Incorporate multiple variables into data visualizations beyond the x and y axes via grouping them together
+- Explore some of `ggplot2`'s array of customization in the context of grouping and facet-wrapping
+- Use facet wrapping & facet grids to create separate graphs based on the values of different variables
 
-## SLIDE 1 {-}
+## Introduction {-}
+- In previous chapters, we learned to plot one to two variables on a single graph
+- Here, we are looking at the `Salaries` data from the `carData` package
+```{r}
+library(pacman)
+p_load(ggplot2, dplyr) 
 
-- ADD SLIDES AS SECTIONS (`##`).
-- TRY TO KEEP THEM RELATIVELY SLIDE-LIKE; THESE ARE NOTES, NOT THE BOOK ITSELF.
+data(Salaries, package="carData")
+
+ggplot(Salaries, aes(x=yrs.since.phd,
+                     y=salary)) + 
+  geom_point() + 
+  labs(title="Academic salary by years since degree")
+```
+
+- What if we want to visualize more than two variables?
+- The `Salaries` data set has multiple columns we can plot
+```{r}
+Salaries %>% head()
+```
+
+## Grouping
+- **Grouping** involves gathering multiple variables together and plotting them on a single graph
+- You can modify different attributes of data points to reflect values of other variables 
+- Ex. color, size, shape, etc (within `aes()` function for `mapping` argument in `ggplot` functions)
+```{r, echo=F}
+ggplot(Salaries, aes(x=yrs.since.phd,
+                     y=salary,
+                     color=rank)) + 
+  geom_point() + 
+  labs(title="Academic salary by years since degree")
+```
+
+\newpage
+```{r, echo=F}
+ggplot(Salaries, aes(x=yrs.since.phd,
+                     y=salary,
+                     color=rank, shape=sex)) + 
+  geom_point() + 
+  labs(title="Academic salary by years since degree")
+```
+
+- NOTE: Be mindful of how busy your graph looks.
+- You can also modify the size and transparency of points.
+```{r}
+ggplot(Salaries, aes(x=yrs.since.phd,
+                     y=salary,
+                      size=yrs.service)) + 
+  # alpha allows you to change transparency
+  # of points
+  geom_point(alpha=0.6) + 
+  labs(title="Academic salary by years since degree")
+```
+
+- Here's another example of grouping with some regression lines incorporated into the graph.
+- The benefits of grouping is that it also affects other `ggplot` layers you apply on top of the base `ggplot` function.
+```{r}
+# plot experience vs. salary with 
+# fit lines (color represents sex)
+ggplot(Salaries, 
+       aes(x = yrs.since.phd, 
+           y = salary, 
+           color = sex)) +
+  geom_point(alpha = .4, 
+             size = 3) +
+  geom_smooth(se=FALSE, 
+              method = "lm", 
+              formula = y~poly(x,2), 
+              size = 1.5) +
+  labs(x = "Years Since Ph.D.",
+       title = "Academic Salary by Sex and Years Experience",
+       subtitle = "9-month salary for 2008-2009",
+       y = "",
+       color = "Sex") +
+  scale_y_continuous(label = scales::dollar) +
+  scale_color_brewer(palette = "Set1") +
+  theme_minimal()
+```
+
+
+## Faceting
+- Faceting is when we have separate graphs that each correspond to different levels of a variable.
+- `facet_wrap` lets you create several graphs of the same type for each level of the variable being faceted at. 
+- Formula for facet wrapping is 
+```{r}
+ggplot(Salaries, aes(x = salary)) +
+  
+  geom_histogram(fill = "cornflowerblue",
+                 color = "white") +
+  facet_wrap(~rank, ncol = 1) +
+  labs(title = "Salary histograms by rank")
+```
+
+
+- The `facet_grid` function is best suited for faceting against multiple variables.
+- Formula for the `facet_grid` function is `row variables ~ column variables.`
+```{r}
+# plot salary histograms by rank and sex
+ggplot(Salaries, aes(x = salary / 1000)) +
+  geom_histogram(color = "white",
+                 fill = "cornflowerblue") +
+  facet_grid(sex ~ rank) +
+  labs(title = "Salary histograms by sex and rank",
+       x = "Salary ($1000)")
+```
+
+- You can also combine grouping variables together and faceting together in one graph, such as what we do with the `gapminder` data from the `gapminder` package below.
+- Note that the dot in the faceting formula `.~ rank + discipline` means that there are no row variables so  `rank + discipline ~.` means no column variables.
+- Also note the theme functions used in the code below are used to simplify the background color, rotate the x-axis text, and make the font size smaller
+```{r}
+# calculate means and standard errors by sex,
+# rank and discipline
+
+library(dplyr)
+plotdata <- Salaries %>%
+  group_by(sex, rank, discipline) %>%
+  summarize(n = n(),
+            mean = mean(salary),
+            sd = sd(salary),
+            se = sd / sqrt(n))
+
+# create better labels for discipline
+plotdata$discipline <- factor(plotdata$discipline,
+                              labels = c("Theoretical",
+                                         "Applied"))
+# create plot
+ggplot(plotdata, 
+       aes(x = sex, 
+           y = mean,
+           color = sex)) +
+  geom_point(size = 3) +
+  geom_errorbar(aes(ymin = mean - se, 
+                    ymax = mean + se),
+                width = .1) +
+  scale_y_continuous(breaks = seq(70000, 140000, 10000),
+                     label = scales::dollar) +
+  facet_grid(. ~ rank + discipline) +
+  theme_bw() +
+  theme(legend.position = "none",
+        panel.grid.major.x = element_blank(),
+        panel.grid.minor.y = element_blank()) +
+  labs(x="", 
+       y="", 
+       title="Nine month academic salaries by gender, discipline, and rank",
+       subtitle = "(Means and standard errors)") +
+  scale_color_brewer(palette="Set1")
+```
+
+
+
 
 ## Meeting Videos {-}
 

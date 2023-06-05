@@ -2,12 +2,539 @@
 
 **Learning objectives:**
 
-- THESE ARE NICE TO HAVE BUT NOT ABSOLUTELY NECESSARY
+- cover graphs that can be very useful, but don’t fit in easily within the other chapters 
 
-## SLIDE 1 {-}
+- these graphs include (1) *3-D scatterplots*, (2) *biplots*, (3) *bubble charts*, (4) *flow diagrams*, (5) *heatmaps*, (6) *radar charts*, (7) *scatterplot matrices*, (8) *waterfall charts*, and (9) *word clouds*.
 
-- ADD SLIDES AS SECTIONS (`##`).
-- TRY TO KEEP THEM RELATIVELY SLIDE-LIKE; THESE ARE NOTES, NOT THE BOOK ITSELF.
+## 3-D Scatterplot
+
+- Since the `ggplot2` package and its extensions can’t create a 3-D plot, you can create a 3-D scatterplot with the `scatterplot3d` function in the `scatterplot3d` package.
+
+- Let’s plot automobile mileage vs. engine displacement vs. car weight using the data in the [`mtcars`](https://www.rdocumentation.org/packages/datasets/versions/3.5.0/topics/mtcars) dataframe -- `mtcars` comes with base R and contains information on 32 cars measured on 11 variables.
+
+```{r 09-01}
+library(scatterplot3d)
+with(mtcars, {
+   scatterplot3d(x = disp,
+                 y = wt, 
+                 z = mpg,
+                 main = "3-D Scatterplot Example 1")
+})
+```
+
+## Modified 3-D Scatterplot
+
+Here we modify the previous graph by 
+
+- *replacing the points with filled blue circles,* 
+
+- *add drop lines to the x-y plane, and* 
+
+- *create more meaningful labels.*
+
+```{r 09-02}
+library(scatterplot3d)
+with(mtcars, {
+  scatterplot3d(x = disp, y = wt, z = mpg, 
+                color = "blue", pch = 19, # solid blue circles
+                type = "h", # lines to the horizontal plane
+                main = "3-D Scatterplot Example 2",
+                xlab = "Displacement (cu. in.)",
+                ylab = "Weight (lb/1000)",
+                zlab = "Miles/(US) Gallon")
+})
+```
+
+## Modified 3-D Scatterplot (cont.)
+
+Here, we label the points. We can do this by 
+
+- *saving the results of the `scatterplot3d` function to an object,* 
+
+- *using the `xyz.convert` function to convert coordinates from 3-D (x, y, z) to 2D-projections (x, y), and*
+
+- *apply the `text` function to add labels to the graph.*
+
+```{r 09-03}
+library(scatterplot3d)
+with(mtcars, {
+  s3d <- scatterplot3d( x = disp, y = wt, z = mpg,
+    color = "blue", pch = 19, type = "h",
+    main = "3-D Scatterplot Example 3",
+    xlab = "Displacement (cu. in.)",
+    ylab = "Weight (lb/1000)",
+    zlab = "Miles/(US) Gallon")
+  
+  # convert 3-D coords to 2D projection
+  s3d.coords <- s3d$xyz.convert(disp, wt, mpg) 
+  
+  # plot text with 50% shrink and place to right of points
+  text(s3d.coords$x, s3d.coords$y,   
+       labels = row.names(mtcars), cex = .5, pos = 4)
+})
+```
+
+## Modified 3-D Scatterplot (cont.)
+
+As a final step, we will add information on the number of cylinders in each car. To do this, we’ll 
+- *add a column to the `mtcars` dataframe indicating the color for each point*, 
+- *shorten the y-axis,* 
+- *change the drop lines to dashed lines*, and, 
+- *add a legend.*
+
+```{r 09-04}
+library(scatterplot3d)
+
+# create column indicating point color
+mtcars$pcolor[mtcars$cyl == 4] <- "red"
+mtcars$pcolor[mtcars$cyl == 6] <- "blue"
+mtcars$pcolor[mtcars$cyl == 8] <- "darkgreen"
+
+with(mtcars, {
+    s3d <- scatterplot3d( x = disp, y = wt, z = mpg,
+      color = pcolor, pch = 19, type = "h", 
+      lty.hplot = 2, scale.y = .75,
+      main = "3-D Scatterplot Example 4",
+      xlab = "Displacement (cu. in.)",
+      ylab = "Weight (lb/1000)",
+      zlab = "Miles/(US) Gallon")
+    
+     s3d.coords <- s3d$xyz.convert(disp, wt, mpg)
+     text(s3d.coords$x, s3d.coords$y, 
+          labels = row.names(mtcars), 
+          pos = 4, cex = .5)  
+     
+legend("topleft", inset=.05, #location
+       bty="n", # suppress legend box,
+       cex=.5, # shrink text 50%
+       title="Number of Cylinders",
+       c("4", "6", "8"), 
+       fill=c("red", "blue", "darkgreen"))
+})
+```
+
+- Now, we can easily see that the car with the highest mileage (Toyota Corolla) has low engine displacement, low weight, and 4 cylinders.
+
+## Biplots
+
+- A biplot is a specialized graph, useful in [principal components analysis (PCA)](https://towardsdatascience.com/a-one-stop-shop-for-principal-component-analysis-5582fb7e0a9c), that attempts to represent the relationship between observations, between variables, and between observations and variables, in a low (usually two) dimensional space.
+
+- Here we create a biplot for the `mtcars` dataset, using the `fviz_pca` function from the `factoextra` package to produce a `ggplot2` graph.
+
+```{r 09-05, message = FALSE}
+data(mtcars) # load data
+
+# fit a principal components model
+fit <- prcomp(x = mtcars, center = TRUE, scale = TRUE)
+
+# plot the results
+library(factoextra)
+fviz_pca(fit, repel = TRUE, labelsize = 3) + 
+  theme_bw() +
+  labs(title = "Biplot of mtcars data")
+```
+
+
+## Bubble Charts
+
+- A bubble chart is basically just a scatterplot where the point size is proportional to the values of a third quantitative variable.
+
+- Bubble charts are quite popular but controversial for the same reason that pie charts are controversial, the fact that people are better at judging length than volume.
+
+- Here we use the `mtcars` dataset to plot car weight vs. mileage and use point size to represent horsepower.
+
+
+```{r 09-06}
+data(mtcars)
+library(ggplot2)
+ggplot(mtcars, aes(x = wt, y = mpg, size = hp)) +
+  geom_point()
+
+```
+
+## Modified Bubble Chart
+
+
+```{r 09-07}
+ggplot(mtcars, aes(x = wt, y = mpg, size = hp)) +
+  geom_point(alpha = .5, 
+             fill="cornflowerblue", 
+             color="black", 
+             shape=21) +
+  scale_size_continuous(range = c(1, 14)) +
+  labs(title = "Auto mileage by weight and horsepower",
+       subtitle = "Motor Trend US Magazine (1973-74 models)",
+       x = "Weight (1000 lbs)",
+       y = "Miles/(US) gallon",
+       size = "Gross horsepower") 
+```
+
+- The `range` parameter in the `scale_size_continuous` function specifies the minimum and maximum size of the plotting symbol. The default is `range = c(1, 6)`.
+
+- The shape option in the `geom_point` function specifies an circle with a border color and fill color.
+
+- From the graph, generally we see that miles per gallon decreases with increased car weight and horsepower.
+
+## Flow Diagrams
+
+- A flow diagram represents a set of dynamic relationships by capturing the physical or metaphorical flow of people, materials, communications, or objects through a set of nodes in a network.
+
+- Two types of flow diagrams are Sankey diagrams and alluvial diagrams.
+
+- In a Sankey diagram, the width of the line between two nodes is proportional to the flow amount. 
+
+- Alluvial diagrams are a more rigidly defined subset of Sankey diagrams.
+
+## Sankey Diagrams
+
+- Building a Sankey diagram requires two data frames, one containing node names and the second containing the links between the nodes and the amount of the flow between them.
+
+- Let's look at [UK energy forecast](https://rkabacoff.github.io/datavis/Data.html#UKEnergy) data which contains energy production and consumption forecasts for the year 2050 to demonstrate.
+
+- Here we have 2 data frames: a 'links' data frame with 3 columns (from, to, value), and a 'nodes' data frame that gives the name of each node.
+
+```{r 09-08}
+library(networkD3) # Load package
+ 
+# Load energy projection data
+URL <- "https://cdn.rawgit.com/christophergandrud/networkD3/master/JSONdata/energy.json"
+Energy <- jsonlite::fromJSON(URL)
+```
+
+```{r 09-09}
+head(Energy$links)
+head(Energy$nodes)
+```
+
+## Sankey Diagrams (cont.)
+
+- We’ll build the diagram using the [`sankeyNetwork`](https://www.rdocumentation.org/packages/networkD3/versions/0.4/topics/sankeyNetwork) function in the `networkD3` package.
+
+- Sankey diagrams created with the `networkD3` package are not `ggplot2` graphs, so they can not be modified with `ggplot2` functions.
+
+```{r 09-10}
+p <- sankeyNetwork(Links = Energy$links,
+                   Nodes = Energy$nodes, 
+                   Source = "source",
+                   Target = "target", 
+                   Value = "value", 
+                   NodeID = "name",
+                   units = "TWh", #optional unit names for popups
+                   fontSize = 12,
+                   nodeWidth = 30)
+p
+```
+
+- Following the flow from left to right, energy supplies are on the left and energy demands are on the right. 
+
+- The graph is interactive so you are able to highlight nodes and drag them to new positions.
+
+## Alluvial Diagrams
+
+- When examining the relationship among categorical variables, alluvial diagrams can serve as alternatives to mosaic plots. 
+
+- In an alluvial diagram, blocks represent clusters of observations, and stream fields between the blocks represent changes to the composition of the clusters over time.
+
+- Using the titanic dataset we'll create alluvial diagrams with the [`ggalluvial`](http://corybrunson.github.io/ggalluvial/) package, which generates `ggplot2` graphs.
+
+```{r 09-11, message=FALSE}
+library(readr); library(dplyr)
+titanic <- read_csv("data/titanic.csv") # input data
+
+titanic_table <- titanic %>%
+  group_by(Class, Sex, Survived) %>%
+  count()
+
+titanic_table$Survived <- factor(titanic_table$Survived, 
+                                 levels = c("Yes", "No"))
+
+head(titanic_table, n=3)
+```
+
+## Alternative Alluvial Diagram
+
+```{r 09-12, warning=FALSE}
+library(ggplot2); library(ggalluvial)
+
+ggplot(titanic_table,
+       aes(axis1 = Class,
+           axis2 = Survived,
+           y = n)) +
+  geom_alluvium(aes(fill = Sex)) +
+  geom_stratum() +
+  geom_text(stat = "stratum", 
+            aes(label = after_stat(stratum))) +
+  scale_x_discrete(limits = c("Class", "Survived"),
+                   expand = c(.1, .1)) +
+  labs(title = "Titanic data",
+       subtitle = "stratified by class, sex, and survival",
+       y = "Frequency") +
+  theme_minimal()
+```
+
+- Start at a node on the left and follow the stream field to the right. 
+
+- The height of the blocks represent the proportion of observations in that cluster and the height of the stream field represents the proportion of observations contained in both blocks they connect.
+
+- For example, most crew are male and do not survive. A much larger percent of 1st class females survive, than 1st class males.
+
+## Modified Alluvial Diagram
+
+Here is an alternative visualization. Survived becomes an axis and Class becomes the fill color. Colors are chosen from the viridis palette. Additionally, the legend is suppressed.
+
+```{r 09-13, warning=FALSE}
+library(ggplot2); library(ggalluvial)
+
+ggplot(titanic_table,
+       aes(axis1 = Class,
+           axis2 = Sex,
+           axis3 = Survived,
+           y = n)) +
+  geom_alluvium(aes(fill = Class)) +
+  geom_stratum() +
+  geom_text(stat = "stratum", 
+            aes(label = after_stat(stratum))) +
+  scale_x_discrete(limits = c("Class", "Sex", "Survived"),
+                   expand = c(.1, .1)) +
+  scale_fill_viridis_d() +
+  labs(title = "Titanic data",
+       subtitle = "stratified by class, sex, and survival",
+       y = "Frequency") +
+  theme_minimal() +
+  theme(legend.position = "none") 
+
+```
+
+
+## Heatmaps
+
+- A heatmap displays a set of data using colored tiles for each variable value within each observation. 
+
+- Although base R comes with a `heatmap` function, the author uses the more powerful [`superheat`](https://rlbarter.github.io/superheat/) package.
+
+- The `superheat` function requires that the data be in particular format. Specifically (1) *the data most be all numeric*, (2) *the row names are used to label the left axis*, and (3) *missing values are allowed*.
+
+```{r 09-14}
+# create a heatmap
+data(mtcars)
+library(superheat)
+superheat(mtcars, scale = TRUE)
+```
+
+- The `scale = TRUE` options standardizes the columns to a mean of zero and standard deviation of one. 
+
+
+## Sorted Heatmap
+
+- We can use clustering to sort the rows and/or columns. 
+
+- In the example below, we’ll (1) *sort the rows so that cars that are similar appear near each other*, and (2) *adjust the text and label sizes*.
+
+```{r 09-15}
+# sorted heat map
+superheat(mtcars,
+          scale = TRUE,
+          left.label.text.size=3,
+          bottom.label.text.size=3,
+          bottom.label.size = .05,
+          row.dendrogram = TRUE )
+```
+
+## Heatmap for Time Series
+
+- Below we make a heatmap to display changes in life expectancies over time for Asian countries using data from the `gapminder` dataset.
+
+- Since the data is in long format, we'll (1) *convert to wide format*, (2) *ensure that it is a data frame*, and (3) *convert the variable country into row names*. 
+
+- Finally, we (1) *sort the data by 2007 life expectancy* and (2) *change the color scheme*.
+
+
+```{r 09-16}
+library(tidyr); library(dplyr)
+data(gapminder, package="gapminder") # load data
+
+asia <- gapminder %>%
+  filter(continent == "Asia") %>% # subset Asian countries
+  select(year, country, lifeExp)
+
+plotdata <- spread(asia, year, lifeExp) # convert to long to wide format
+
+plotdata <- as.data.frame(plotdata) #ensure it's a data frame
+row.names(plotdata) <- plotdata$country # save country as row names
+plotdata$country <- NULL
+sort.order <- order(plotdata$"2007") # row order
+
+library(RColorBrewer) 
+colors <- rev(brewer.pal(5, "Blues")) # color scheme
+
+superheat(plotdata,
+          scale = FALSE,
+          left.label.text.size=3,
+          bottom.label.text.size=3,
+          bottom.label.size = .05,
+          heat.pal = colors,
+          order.rows = sort.order,
+          title = "Life Expectancy in Asia")
+```
+
+## Radar Charts
+
+- A radar chart (also called a spider or star chart) displays one or more groups or observations on three or more quantitative variables.
+
+- Radar charts can be created with `ggradar` function in the [`ggradar`](https://github.com/ricardo-bion/ggradar) package. Unfortunately, the package in not available on CRAN, so we have to install it from Github.
+
+- We have to put the data in a specific format where (1) *the first variable is called group and contains the identifier for each observation* and (2) *the numeric variables are scaled so that their values range from 0 to 1*.
+
+
+
+```{r 09-17, message=FALSE, warning=FALSE}
+#devtools::install_github("ricardo-bion/ggradar")
+
+data(msleep, package = "ggplot2") # prepare data
+library(ggradar); library(scales); library(dplyr)
+
+plotdata <- msleep %>%
+  filter(name %in% c("Cow", "Dog", "Pig")) %>%
+  select(name, sleep_total, sleep_rem, 
+         sleep_cycle, brainwt, bodywt) %>%
+  rename(group = name) %>%
+  mutate_at(vars(-group),
+            funs(rescale))
+plotdata
+
+```
+
+## Basic Radar Chart
+
+- In the below example, we'll use [Mammal Sleep](https://rkabacoff.github.io/datavis/Data.html#Msleep) data to compare dogs, pigs, and cows in terms of body size, brain size, and sleep characteristics (total sleep time, length of sleep cycle, and amount of REM sleep). The data come from the `msleep` dataset that ships with `ggplot2`.
+
+```{r 09-18, message=FALSE, warning=FALSE}
+ggradar(plotdata, 
+        grid.label.size = 4,
+        axis.label.size = 4, 
+        group.point.size = 5,
+        group.line.width = 1.5,
+        legend.text.size= 10) +
+  labs(title = "Mammals, size, and sleep")
+```
+
+
+- The `mutate_at` function rescales all variables except *group*. 
+
+- The various `size` options control the font sizes for the percent labels, variable names, point size, line width, and legend labels respectively.
+
+- We can see from the chart that, (1) *cows have large brain and body weights, long sleep cycles, short total sleep time and little time in REM sleep*, where in comparison, (2) *dogs have small body and brain weights, short sleep cycles, and a large total sleep time and time in REM sleep*.
+
+## Scaterplot Matrix 
+
+- A scatterplot matrix is a collection of scatterplots organized as a grid. It is similar to a correlation plot but instead of displaying correlations, displays the underlying data.
+
+- You can create a scatterplot matrix using the `ggpairs` function in the [`GGally`](https://ggobi.github.io/ggally/#ggallyggpairs) package.
+
+- We can illustrate its use by examining the relationships between mammal size and sleep characteristics. Brain weight and body weight are highly skewed (think mouse and elephant) so we’ll transform them to log brain weight and log body weight before creating the graph.
+
+```{r 09-19, message=FALSE, warning=FALSE}
+library(GGally)
+
+data(msleep, package="ggplot2") # prepare data
+library(dplyr)
+df <- msleep %>% 
+  mutate(log_brainwt = log(brainwt),
+         log_bodywt = log(bodywt)) %>%
+  select(log_brainwt, log_bodywt, sleep_total, sleep_rem)
+ 
+ggpairs(df) # create a scatterplot matrix
+```
+
+## Customized Scaterplot Matrix
+
+Since `ggpairs` creates a `ggplot2` graph, additional functions can be added to alter the theme, title, labels, etc. 
+
+```{r 09-20, warning=FALSE, message=FALSE}
+
+# custom function for density plot
+my_density <- function(data, mapping, ...){
+  ggplot(data = data, mapping = mapping) + 
+    geom_density(alpha = 0.5,
+                 fill = "cornflowerblue", ...)}
+
+# custom function for scatterplot
+my_scatter <- function(data, mapping, ...){
+  ggplot(data = data, mapping = mapping) + 
+    geom_point(alpha = 0.5,
+               color = "cornflowerblue") + 
+    geom_smooth(method=lm, 
+                se=FALSE, ...)}
+
+# create scatterplot matrix
+ggpairs(df, 
+        lower=list(continuous = my_scatter), 
+        diag = list(continuous = my_density)) +
+  labs(title = "Mammal size and sleep characteristics") +
+  theme_bw()
+```
+
+
+## Waterfall Charts
+
+- A waterfall chart illustrates the cumulative effect of a sequence of positive and negative values.
+
+- Let’s create a dataset to plot the cumulative effect of revenue and expenses for a fictional company sing the `waterfall` function in the `waterfalls` package.
+
+```{r 09-21}
+# create company income statement
+category <- c("Sales", "Services", "Fixed Costs", 
+              "Variable Costs", "Taxes")
+amount <- c(101000, 52000, -23000, -15000, -10000)
+income <- data.frame(category, amount) 
+
+library(ggplot2); library(waterfalls)
+waterfall(income) # create waterfall chart
+```
+
+## Modified Waterfall Chart
+
+- Since the `waterfall` function creates a `ggplot2` graph, we can use additional functions to customize the results.
+
+- Below, we add a total (net) column. 
+
+```{r 09-22}
+# create waterfall chart with total column
+waterfall(income, 
+          calc_total=TRUE, 
+          total_axis_text = "Net",
+          total_rect_text_color="black",
+          total_rect_color="goldenrod1") +
+  scale_y_continuous(label=scales::dollar) +
+  labs(title = "West Coast Profit and Loss", 
+       subtitle = "Year 2017", y="", x="") +
+  theme_minimal() 
+```
+
+## Word Clouds
+
+- A word cloud (also called a tag cloud), is basically an infographic that indicates the frequency of words in a collection of text (e.g., tweets, a text document, a set of text documents).
+
+- Here we use the [`wordcloud2`](https://cran.r-project.org/web/packages/wordcloud2/vignettes/wordcloud.html) package and the `demoFreq` dataset, containing file of words and their frequency, which ships with it.
+
+
+```{r 09-23}
+# library
+library(wordcloud2) 
+ 
+# have a look to the example dataset
+# head(demoFreq)
+
+# Basic plot
+wordcloud2(data=demoFreq, size=1.6)
+```
+
+
+## Resources
+
+[r graph gallery: Wordcloud](https://r-graph-gallery.com/wordcloud.html)
+
+[r graph gallery: Sankey Charts](https://r-graph-gallery.com/sankey-diagram.html)
 
 ## Meeting Videos {-}
 
