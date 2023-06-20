@@ -13,12 +13,17 @@
 
 ### Cohort 1 {-}
 
-`r knitr::include_url("https://www.youtube.com/embed/URL")`
+`r knitr::include_url("https://www.youtube.com/embed/PkFTO1LTl_k")`
 
 <details>
 <summary> Meeting chat log </summary>
 
 ```
-LOG
+00:16:48	Lydia Gibson:	I think Sigma is another newer external editor
+00:21:34	Lydia Gibson:	Very cool
+00:21:58	Lydia Gibson:	Oh, I misspelled Figma* earlier
+00:28:20	Lydia Gibson:	Not sure
+00:28:22	Lydia Gibson:	lol
+00:34:33	Lydia Gibson:	Nice!
 ```
 </details>

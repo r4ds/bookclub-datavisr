@@ -312,12 +312,16 @@ mosaic(tbl,
 
 ### Cohort 1 {-}
 
-`r knitr::include_url("https://www.youtube.com/embed/URL")`
+`r knitr::include_url("https://www.youtube.com/embed/AEKNf7p2hYA")`
 
 <details>
 <summary> Meeting chat log </summary>
 
 ```
-LOG
+00:38:11	Kotomi Oda:	Putting color makes it much easier to read
+00:40:24	Tiffany Kollah:	Reacted to "Putting color makes ..." with ❤️
+00:41:16	Lydia Gibson:	http://pbreheny.github.io/visreg/index.html
+00:42:51	Lydia Gibson:	https://www.rdocumentation.org/packages/glmnet/versions/4.1-7
+00:43:25	Kotomi Oda:	yes
 ```
 </details>

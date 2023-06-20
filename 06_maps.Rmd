@@ -226,12 +226,18 @@ county_choropleth(plotdata,
 
 ### Cohort 1 {-}
 
-`r knitr::include_url("https://www.youtube.com/embed/URL")`
+`r knitr::include_url("https://www.youtube.com/embed/YQXxJgvsgyc")`
 
 <details>
 <summary> Meeting chat log </summary>
 
 ```
-LOG
+00:01:06	Oluwafemi Oyedele:	Hi Ryan!!!
+00:02:35	Ryan Spjut:	Hi femi!
+00:20:57	Oluwafemi Oyedele:	https://journal.r-project.org/archive/2013-1/kahle-wickham.pdf
+00:34:01	Oluwafemi Oyedele:	https://cran.r-project.org/web/packages/choroplethr/choroplethr.pdf
+00:34:12	Oluwafemi Oyedele:	https://cran.r-project.org/web/packages/tmap/vignettes/tmap-getstarted.html
+00:35:37	Lydia Gibson:	https://github.com/hrbrmstr/statebins
+00:41:41	Kotomi Oda:	Yes!
 ```
 </details>

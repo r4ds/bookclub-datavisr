@@ -358,14 +358,25 @@ ggplot(uspopage, aes(x = Year,
 
 ### Cohort 1 {.unnumbered}
 
-`r knitr::include_url("https://www.youtube.com/embed/URL")`
+`r knitr::include_url("https://www.youtube.com/embed/OtgqUi7kgzM")`
 
 <details>
 
 <summary>Meeting chat log</summary>
 
 ```         
-LOG
+00:11:17	Lydia Gibson:	Nice!
+00:11:40	Oluwafemi Oyedele:	Reacted to "Nice!" with 👌
+00:15:11	Lydia Gibson:	Cool. So the lowercase abbreviates whether its the month or day
+00:18:19	Ken Vu:	Its good
+00:18:20	Ken Vu:	:)
+00:26:24	Lydia Gibson:	That’s beautiful 😍
+00:26:25	Ken Vu:	That's pretty neat.  Looks very professional
+00:31:06	Lydia Gibson:	Nice!
+00:31:43	Ken Vu:	Colorful 🙂 Kind of lick a trendline version of stacked bar plots
+00:31:46	Ken Vu:	*like
+00:37:36	Ken Vu:	👏
+00:37:47	Ken Vu:	Thank you, Kotomi!  You gave an awesome presentation
 ```
 
 </details>

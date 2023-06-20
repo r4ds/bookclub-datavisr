@@ -13,12 +13,24 @@
 
 ### Cohort 1 {-}
 
-`r knitr::include_url("https://www.youtube.com/embed/URL")`
+`r knitr::include_url("https://www.youtube.com/embed/0lM00oSyJKU")`
 
 <details>
 <summary> Meeting chat log </summary>
 
 ```
-LOG
+00:24:02	Oluwafemi Oyedele:	https://rkabacoff.github.io/datavis/modifyingscales.pdf
+00:24:14	Lydia Gibson:	Thank you
+00:29:37	Oluwafemi Oyedele:	https://github.com/timcdlucas/palettetown
+00:30:05	Oluwafemi Oyedele:	https://github.com/EmilHvitfeldt/paletteer
+00:30:10	Lydia Gibson:	cool
+00:33:33	Lydia Gibson:	I think I’ve heard of the extrafonts package but I’d never used it. I’m looking forward to trying it out
+00:33:45	Ken Vu:	Reacted to "I think I’ve heard o..." with 👍
+00:34:04	Ken Vu:	I didn't know you can change the font of the text.  That's very useful
+00:34:19	Oluwafemi Oyedele:	https://www.andrewheiss.com/blog/2017/09/27/working-with-r-cairo-graphics-custom-fonts-and-ggplot/#windows
+00:38:28	Lydia Gibson:	Reacted to "https://www.andrewhe..." with 👍🏾
+00:38:58	Lydia Gibson:	I didn’t realize you could make such detailed customizations to the legend
+00:49:27	Oluwafemi Oyedele:	https://www.rdocumentation.org/packages/gghighlight/versions/0.0.1/topics/gghighlight
+00:49:35	Lydia Gibson:	Reacted to "https://www.rdocumen..." with 👍🏾
 ```
 </details>
