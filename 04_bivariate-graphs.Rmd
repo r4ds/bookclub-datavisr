@@ -554,12 +554,15 @@ ggplot(plotdata,
 
 ### Cohort 1 {-}
 
-`r knitr::include_url("https://www.youtube.com/embed/URL")`
+`r knitr::include_url("https://www.youtube.com/embed/q4hWHd9eR7s")`
 
 <details>
 <summary> Meeting chat log </summary>
 
 ```
-LOG
+00:31:37	Lydia Gibson:	Very nice
+00:47:43	Lydia Gibson:	I never thought of the relationship of a violin plot to a density plot explicitly but that makes a lot of sense
+00:48:39	Ken Vu:	Very cool.  geom_density_ridges - first time I've heard of it.
+01:00:06	Kotomi Oda:	Thank you for the presentation!
 ```
 </details>

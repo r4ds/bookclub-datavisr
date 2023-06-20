@@ -540,12 +540,17 @@ wordcloud2(data=demoFreq, size=1.6)
 
 ### Cohort 1 {-}
 
-`r knitr::include_url("https://www.youtube.com/embed/URL")`
+`r knitr::include_url("https://www.youtube.com/embed/rTrRaGQuj8M")`
 
 <details>
 <summary> Meeting chat log </summary>
 
 ```
-LOG
+00:31:01	Oluwafemi Oyedele:	Same here!!!
+00:50:46	Ken Vu:	ggpairs is a lot more useful than the standard pairs function.  I like how much more info ggpairs gives about the distributions of each o the variables and a variable's correlation value
+00:52:37	Tiffany Kollah (She/Her):	Reacted to "ggpairs is a lot mor..." with ❤️
+00:58:01	Lydia Gibson:	https://cran.r-project.org/web/packages/wordcloud2/vignettes/wordcloud.html
+00:58:11	Ken Vu:	Reacted to "https://cran.r-proje..." with 👍
+00:59:46	Lydia Gibson:	https://r-graph-gallery.com/323-sankey-diagram-with-the-networkd3-library.html
 ```
 </details>

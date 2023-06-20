@@ -268,12 +268,20 @@ There are three basic approaches to dealing with missing data: *feature selectio
 
 ### Cohort 1 {-}
 
-`r knitr::include_url("https://www.youtube.com/embed/URL")`
+`r knitr::include_url("https://www.youtube.com/embed/PQ62v8j8rRM")`
 
 <details>
 <summary> Meeting chat log </summary>
 
 ```
-LOG
+00:16:13	Lydia Gibson:	https://r4ds.github.io/bookclub-datavisr/
+00:16:22	Lydia Gibson:	https://rkabacoff.github.io/datavis/
+00:16:32	Lydia Gibson:	https://github.com/r4ds/bookclub-datavisr
+00:20:16	Lydia Gibson:	https://docs.google.com/spreadsheets/d/1yrXUdZ95upU3kISocqinvaDh-U2JK3mnjhtj4Fr27H8/edit#gid=0
+00:20:20	Ryan Spjut:	stepping away  be back in a few minutes
+00:38:26	Lydia Gibson:	https://www.rdocumentation.org/packages/readr/versions/0.1.1/topics/read_delim
+00:38:38	Lydia Gibson:	https://www.rdocumentation.org/packages/readxl/versions/1.4.2
+00:57:02	Lydia Gibson:	https://github.com/rstudio/cheatsheets/blob/main/tidyr.pdf
+00:57:13	Lydia Gibson:	https://github.com/rstudio/cheatsheets/blob/main/data-transformation.pdf
 ```
 </details>

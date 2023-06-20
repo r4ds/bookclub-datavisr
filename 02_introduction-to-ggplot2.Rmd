@@ -405,12 +405,18 @@ myplot + theme_bw()
 
 ### Cohort 1 {-}
 
-`r knitr::include_url("https://www.youtube.com/embed/URL")`
+`r knitr::include_url("https://www.youtube.com/embed/pDdDjnYmHAs")`
 
 <details>
 <summary> Meeting chat log </summary>
 
 ```
-LOG
+00:05:30	Lydia Gibson:	I can’t hear your audio that well
+00:56:33	Oluwafemi Oyedele:	https://exts.ggplot2.tidyverse.org/gallery/
+00:56:42	Oluwafemi Oyedele:	https://r-graph-gallery.com/
+00:56:43	Kotomi Oda:	Thank you for the presentation!
+00:56:48	Oluwafemi Oyedele:	https://r-graphics.org/
+00:56:58	Oluwafemi Oyedele:	https://ggplot2-book.org/introduction.html
+00:57:05	Lydia Gibson:	https://docs.google.com/spreadsheets/d/1yrXUdZ95upU3kISocqinvaDh-U2JK3mnjhtj4Fr27H8/edit#gid=0
 ```
 </details>

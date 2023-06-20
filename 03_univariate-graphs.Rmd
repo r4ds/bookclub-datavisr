@@ -175,12 +175,13 @@ For more information about annotations, see [*ggplot2: Elegant Graphics for Data
 
 ### Cohort 1 {-}
 
-`r knitr::include_url("https://www.youtube.com/embed/URL")`
+`r knitr::include_url("https://www.youtube.com/embed/nbMfeIrJFio")`
 
 <details>
 <summary> Meeting chat log </summary>
 
 ```
-LOG
+00:05:44	Lydia Gibson:	https://docs.google.com/spreadsheets/d/1yrXUdZ95upU3kISocqinvaDh-U2JK3mnjhtj4Fr27H8/edit#gid=0
+00:44:50	Oluwafemi Oyedele:	Sorry for joining late!!!
 ```
 </details>

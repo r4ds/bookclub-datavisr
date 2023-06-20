@@ -161,12 +161,22 @@ ggplot(plotdata,
 
 ### Cohort 1 {-}
 
-`r knitr::include_url("https://www.youtube.com/embed/URL")`
+`r knitr::include_url("https://www.youtube.com/embed/Wz0WCFv-gOk")`
 
 <details>
 <summary> Meeting chat log </summary>
 
 ```
-LOG
+00:01:23	Oluwafemi Oyedele:	Hi Lydia!!!
+00:01:56	Lydia Gibson:	Hey Femi!
+00:05:05	Oluwafemi Oyedele:	yes, I am presenting next week!!!
+00:05:58	Lydia Gibson:	Awesome!
+00:15:05	Oluwafemi Oyedele:	discipline: A factor with levels A (“theoretical” departments) or B (“applied” departments)
+00:52:08	Kotomi Oda:	I like this plot style
+00:52:32	Lydia Gibson:	Yeah very cool
+00:52:55	Tiffany Kollah:	this was very good Ken!
+00:53:42	Tiffany Kollah:	thank you so much!!! 🙂
+00:54:02	Oluwafemi Oyedele:	Thank you!!!
+00:54:25	Kotomi Oda:	Yay!
 ```
 </details>

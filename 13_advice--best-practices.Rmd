@@ -13,12 +13,29 @@
 
 ### Cohort 1 {-}
 
-`r knitr::include_url("https://www.youtube.com/embed/URL")`
+`r knitr::include_url("https://www.youtube.com/embed/vd9skKBJmp0")`
 
 <details>
 <summary> Meeting chat log </summary>
 
 ```
-LOG
+00:15:11	Lydia Gibson:	My internet is unstable. I’m going to switch to my hotspot really quick
+00:18:44	Lydia Gibson:	At first glance I didn’t realize how confusing the colors of the bars were. I was wondering why it had provided a legend but that’s why
+00:19:07	Ken Vu:	Reacted to "At first glance I di..." with 👍
+00:20:45	Oluwafemi Oyedele:	https://blog.hubspot.com/marketing/color-combination-data-visualization
+00:22:08	Ken Vu:	There's a website where you can find the hex code for the color you want.  Sometimes, the default colors may not work best so you can use the link below to customize your color and get the hex code for it to use in R
+00:22:09	Ken Vu:	https://htmlcolorcodes.com/
+00:22:38	Lydia Gibson:	Reacted to "There's a website wh..." with 👍🏾
+00:22:42	Lydia Gibson:	Reacted to "https://htmlcolorcod..." with ❤️
+00:27:51	Lydia Gibson:	Yeah, there’s a big difference between the message you get from the two graphs.
+00:28:31	Ken Vu:	Reacted to "Yeah, there’s a big ..." with 👍
+00:32:59	Lydia Gibson:	Link to the free online ggplot2 book: https://ggplot2-book.org/
+00:33:07	Ken Vu:	Reacted to "Link to the free onl..." with 👍
+00:35:16	Ken Vu:	Thank you so much.  I feel this chapter provides a good guideline on how to make effective visualizations.
+00:36:53	Ken Vu:	My favorite one is the one that introduced unconventional graphs that are hard to categorize like the dumbbell plot for example and the node map.  I'm someone who likes to expand many ways to tell stories so knowing what other plots I can do is definitely helpful
+00:37:48	Kotomi Oda:	👍🏻
+00:37:53	Ken Vu:	Thank you for hosting book club Lydia
+00:37:59	Ken Vu:	Thank you Femi for presenting this chapter
+00:38:12	Kotomi Oda:	Thank you!
 ```
 </details>
